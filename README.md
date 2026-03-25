@@ -217,7 +217,7 @@ java ExposureCalculatorTest
 
 ## 📄 License
 
-Copyright © 2025 Antonio Dicorato. All rights reserved.
+Copyright © 2026 Antonio Dicorato. All rights reserved.
 
 This source code is provided **exclusively for educational and portfolio purposes**.
 
@@ -453,7 +453,7 @@ java ExposureCalculatorTest
 
 ## 📄 Licenza
 
-Copyright © 2025 Antonio Dicorato. Tutti i diritti riservati.
+Copyright © 2026 Antonio Dicorato. Tutti i diritti riservati.
 
 Questo codice sorgente è fornito **esclusivamente a scopo educativo e per portfolio**.
 
