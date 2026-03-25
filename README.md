@@ -1,4 +1,4 @@
-# Lux → Triade Esposimetrica (LuxExposure)
+# Photon-Exposure-Engine
 
 **Android App (Java) — Professional Photography Exposure Converter**
 
@@ -14,7 +14,7 @@ Converts an illuminance value in lux (measured by a light meter) into the photog
 
 ## 📱 About this repository
 
-This repository contains the full source code for the Lux → Triade Esposimetrica (LuxExposure) app.
+This repository contains the full source code for the **Photon-Exposure-Engine** app.
 
 It is published:
 
@@ -115,7 +115,7 @@ The app includes a full table of equivalent combinations to demonstrate this pri
 ## 🧱 Project structure
 
 ```
-LuxExposimeter/
+Photon-Exposure-Engine/
 ├── app/
 │   └── src/main/
 │       ├── AndroidManifest.xml
@@ -169,7 +169,7 @@ LuxExposimeter/
 ## 🚀 How to import in Android Studio
 
 1. Open Android Studio
-2. **File → Open** → select the `LuxExposimeter/` folder
+2. **File → Open** → select the `Photon-Exposure-Engine/` folder
 3. Wait for Gradle sync
 4. Connect a device (API 21+) or start an emulator
 5. Press **Run** ▶
@@ -236,7 +236,8 @@ You are **not permitted** to:
 
 without explicit written permission.
 
-For licensing inquiries or collaborations: **[your-email]**
+For licensing inquiries or collaborations:
+**[antoniodicoratoinfodev@gmail.com](mailto:antoniodicoratoinfodev@gmail.com)**
 
 ---
 
@@ -254,5 +255,3 @@ The full, ready-to-use application will be released on the Google Play Store.
 **Coming soon.**
 
 ---
-
-*Last updated: March 2026*
