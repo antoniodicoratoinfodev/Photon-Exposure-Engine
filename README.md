@@ -1,4 +1,4 @@
-# Photon-Exposure-Engine
+# Photon-Exposure-Engine (Lux Exposure Calculator)
 
 **Android App (Java) — Professional Photography Exposure Converter**
 
@@ -14,7 +14,7 @@ Converts an illuminance value in lux (measured by a light meter) into the photog
 
 ## 📱 About this repository
 
-This repository contains the full source code for the **Photon-Exposure-Engine** app.
+This repository contains the full source code for the **Photon-Exposure-Engine (Lux Exposure Calculator)** app.
 
 It is published:
 
@@ -255,3 +255,5 @@ The full, ready-to-use application will be released on the Google Play Store.
 **Coming soon.**
 
 ---
+
+*Last updated: March 2026*
