@@ -1,73 +1,118 @@
-# Lux → Triade Esposimetrica
+# Lux → Triade Esposimetrica (LuxExposure)
 
-**App Android (Java) — Convertitore fotografico professionale**
+**Android App (Java) — Professional Photography Exposure Converter**
 
-Converte un valore di illuminamento in lux (misurato con un esposimetro) nella triade esposimetrica fotografica: **ISO**, **diaframma (f-number)** e **tempo di esposizione**.
+![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
+
+Converts an illuminance value in lux (measured by a light meter) into the photographic exposure triad: **ISO**, **aperture (f-number)**, and **shutter speed**.
+
+> **Note:** This source code is publicly available **for educational and portfolio purposes only**.
+> The full application will be available for purchase on the Google Play Store.
+> No commercial use, redistribution, or derivative works are permitted without explicit written permission.
 
 ---
 
-## Formule matematiche
+## 📱 About this repository
 
-### 1. Lux → EV a ISO 100
+This repository contains the full source code for the Lux → Triade Esposimetrica (LuxExposure) app.
 
-```
-EV₁₀₀ = log₂(E / 2.5)
-```
+It is published:
 
-dove:
-- `E` = illuminamento in lux (misurato dall'esposimetro)
-- `2.5 = C / 100` con `C = 250` (costante di calibrazione ANSI PH3.49-1971 / ISO 2720:1974 per sensore piano/flat)
+* to showcase development skills
+* as a learning resource for photographers and developers
+* to document the mathematical foundation behind exposure calculation
 
-Equivalente a: `E = 2.5 × 2^EV₁₀₀`
+The **official, ready-to-use version** of the app will be released on the Google Play Store.
+The source code in this repository is **not licensed for commercial use**.
 
-### 2. Correzione EV per ISO arbitrario
+---
 
-```
-EV_ISO = EV₁₀₀ + log₂(ISO / 100)
-```
+## 📐 Mathematical formulas
 
-Ogni raddoppio di ISO aggiunge +1 EV (1 stop).
-
-### 3. Definizione di EV dalla triade
+### 1. Lux → EV at ISO 100
 
 ```
-EV = log₂(N² / t)
+EV100 = log2(E / 2.5)
 ```
 
-dove:
-- `N` = f-number (diaframma)
-- `t` = tempo di esposizione in secondi
+Where:
 
-### 4. Dato EV e diaframma → calcola il tempo
+* `E` = illuminance in lux
+* `2.5 = C / 100`, with `C = 250` (ANSI PH3.49-1971 / ISO 2720:1974 calibration constant for flat/cosine sensors)
+
+Equivalent form:
+
+```
+E = 2.5 × 2^EV100
+```
+
+---
+
+### 2. EV correction for arbitrary ISO
+
+```
+EV_ISO = EV100 + log2(ISO / 100)
+```
+
+Doubling ISO increases exposure by **+1 EV (one stop)**.
+
+---
+
+### 3. EV definition from the exposure triad
+
+```
+EV = log2(N² / t)
+```
+
+Where:
+
+* `N` = f-number (aperture)
+* `t` = exposure time in seconds
+
+---
+
+### 4. Given EV and aperture → shutter speed
 
 ```
 t = N² / 2^EV
 ```
 
-### 5. Dato EV e tempo → calcola il diaframma
+---
+
+### 5. Given EV and shutter speed → aperture
 
 ```
 N = √(t × 2^EV)
 ```
 
-### Verifica incrociata
+---
 
-Tutte le combinazioni `(N, t)` che soddisfano `EV = log₂(N²/t)` producono la stessa esposizione. La tabella delle combinazioni equivalenti nell'app mostra questo principio.
+### 🔁 Cross-validation
+
+All combinations `(N, t)` that satisfy:
+
+```
+EV = log2(N² / t)
+```
+
+produce the **same exposure**.
+
+The app includes a full table of equivalent combinations to demonstrate this principle.
 
 ---
 
-## Fonti
+## 📚 Sources
 
-| Fonte | Dettaglio |
-|---|---|
-| Wikipedia "Exposure value" | Definizione formale EV, tabella lux/EV |
-| ANSI PH3.49-1971 | Costante C = 250 per sensori piani |
-| ISO 2720:1974 | Standard internazionale esposimetri |
-| ANSI PH2.7-1986 | Tabella scene fotografiche per EV |
+| Source                       | Description                                     |
+| ---------------------------- | ----------------------------------------------- |
+| Wikipedia – “Exposure value” | Formal EV definition and lux/EV reference table |
+| ANSI PH3.49-1971             | Calibration constant C = 250                    |
+| ISO 2720:1974                | International light meter standard              |
+| ANSI PH2.7-1986              | EV reference table for real-world scenes        |
 
 ---
 
-## Struttura del progetto
+## 🧱 Project structure
 
 ```
 LuxExposimeter/
@@ -75,15 +120,15 @@ LuxExposimeter/
 │   └── src/main/
 │       ├── AndroidManifest.xml
 │       ├── java/com/photography/luxexposimeter/
-│       │   ├── ExposureCalculator.java   ← Logica matematica pura
-│       │   ├── MainActivity.java         ← UI Android
-│       │   └── ExposureCalculatorTest.java ← Test unitari (eseguibili con javac)
+│       │   ├── ExposureCalculator.java
+│       │   ├── MainActivity.java
+│       │   └── ExposureCalculatorTest.java
 │       └── res/
-│           ├── layout/activity_main.xml  ← Layout UI dark
-│           ├── values/strings.xml        ← Stringhe (italiano)
-│           ├── values/colors.xml         ← Palette dark fotografica
-│           ├── values/themes.xml         ← Tema Material dark
-│           └── drawable/ic_launcher_foreground.xml ← Icona vettoriale
+│           ├── layout/activity_main.xml
+│           ├── values/strings.xml
+│           ├── values/colors.xml
+│           ├── values/themes.xml
+│           └── drawable/ic_launcher_foreground.xml
 ├── build.gradle
 ├── settings.gradle
 ├── gradle.properties
@@ -92,60 +137,70 @@ LuxExposimeter/
 
 ---
 
-## Funzionalità dell'app
+## ⚙️ App features
 
 ### Input
-- **Valore lux**: inserito manualmente (da esposimetro)
-- **ISO**: selezionabile da spinner (25 → 102400)
 
-### Modalità di calcolo
+* **Lux value**: manual input (light meter)
+* **ISO**: selectable (25 → 102400)
 
-| Modalità | Input fisso | Calcolato |
-|---|---|---|
-| **A — Priorità diaframma** | f-number | Tempo di esposizione |
-| **B — Priorità otturatore** | Tempo | f-number |
+---
+
+### Calculation modes
+
+| Mode                      | Fixed input   | Calculated    |
+| ------------------------- | ------------- | ------------- |
+| **A — Aperture Priority** | f-number      | Shutter speed |
+| **B — Shutter Priority**  | Shutter speed | f-number      |
+
+---
 
 ### Output
-- EV a ISO 100 (`EV₁₀₀`)
-- EV corretto per l'ISO scelto (`EV_ISO`)
-- Diaframma (valore esatto + standard fotografico più vicino)
-- Tempo di esposizione (valore esatto + standard fotografico più vicino)
-- Descrizione della scena in base all'EV
-- Tabella completa di tutte le combinazioni equivalenti (con verifica EV)
+
+* EV at ISO 100 (`EV100`)
+* EV corrected for selected ISO (`EV_ISO`)
+* Aperture (exact value + nearest standard value)
+* Shutter speed (exact value + nearest standard value)
+* Scene description based on EV
+* Full table of equivalent exposure combinations
 
 ---
 
-## Come importare in Android Studio
+## 🚀 How to import in Android Studio
 
-1. Aprire Android Studio
-2. **File → Open** → selezionare la cartella `LuxExposimeter/`
-3. Attendere la sincronizzazione Gradle
-4. Collegare un dispositivo Android (API 21+) o avviare un emulatore
-5. Premere **Run** (▶)
-
-### Requisiti
-- Android Studio Hedgehog (2023.1.1) o superiore
-- Android SDK 34
-- minSdk 21 (Android 5.0 Lollipop)
-- Java 8
+1. Open Android Studio
+2. **File → Open** → select the `LuxExposimeter/` folder
+3. Wait for Gradle sync
+4. Connect a device (API 21+) or start an emulator
+5. Press **Run** ▶
 
 ---
 
-## Test unitari
+### Requirements
 
-Il file `ExposureCalculatorTest.java` è un test puro Java (senza dipendenze Android) che verifica:
+* Android Studio Hedgehog (2023.1.1) or newer
+* Android SDK 34
+* minSdk 21 (Android 5.0 Lollipop)
+* Java 8
 
-- Conversione lux → EV₁₀₀ (con tabella di riferimento Wikipedia)
-- Correzione EV per ISO
-- Calcolo tempo da EV + f-number
-- Calcolo f-number da EV + tempo
-- Round-trip matematico (EV → N,t → EV) su 35 combinazioni
-- Combinazioni equivalenti
-- Formattazione tempi e diaframmi
+---
 
-**Risultato**: 67 test, 0 fallimenti.
+## 🧪 Unit tests
 
-Per eseguire i test (richiede JDK):
+`ExposureCalculatorTest.java` is a pure Java test suite (no Android dependencies) that verifies:
+
+* Lux → EV100 conversion
+* EV correction for ISO
+* Shutter speed from EV + aperture
+* Aperture from EV + shutter speed
+* Mathematical round-trip (EV → N,t → EV)
+* Equivalent exposure combinations
+* Formatting of shutter speeds and apertures
+
+**Result:** 67 tests — 0 failures ✅
+
+Run tests:
+
 ```bash
 cd app/src/main/java/com/photography/luxexposimeter
 javac ExposureCalculator.java ExposureCalculatorTest.java
@@ -154,9 +209,50 @@ java ExposureCalculatorTest
 
 ---
 
-## Note tecniche
+## 🧠 Technical notes
 
-- La costante `C = 250` è valida per sensori **piani (flat/cosine)**, standard per la misurazione dell'illuminamento in lux. Per sensori emisferici (hemispherical) si usa `C = 320` (Minolta) o `C = 340` (Sekonic).
-- I valori standard di f-number seguono la scala fotografica ISO (1/3 stop e 1/2 stop inclusi).
-- I tempi di esposizione standard coprono da 30" a 1/8000 s.
-- Il confronto tra tempi standard avviene in scala logaritmica per coerenza con la scala fotografica.
+* `C = 250` is valid for **flat (cosine) sensors**, standard in lux measurement
+* Hemispherical sensors use:
+
+  * `C = 320` (Minolta)
+  * `C = 340` (Sekonic)
+* Standard f-numbers follow ISO photographic scale (including 1/3 and 1/2 stops)
+* Shutter speeds range from **30s to 1/8000s**
+* Comparisons are performed on a **logarithmic scale** to match exposure stops
+
+---
+
+## 📄 License
+
+Copyright © 2025 Antonio Dicorato. All rights reserved.
+
+This source code is provided **exclusively for educational and portfolio purposes**.
+
+You are **not permitted** to:
+
+* use it commercially
+* modify or redistribute it
+* create derivative works
+
+without explicit written permission.
+
+For licensing inquiries or collaborations: **[your-email]**
+
+---
+
+### Disclaimer
+
+This software is provided *“as is”*, without warranty of any kind.
+The author shall not be liable for any damages arising from its use.
+
+---
+
+## 📦 App availability
+
+The full, ready-to-use application will be released on the Google Play Store.
+
+**Coming soon.**
+
+---
+
+*Last updated: March 2026*
