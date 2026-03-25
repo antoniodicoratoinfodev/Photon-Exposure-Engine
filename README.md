@@ -233,6 +233,18 @@ For licensing inquiries or collaborations:
 **[antoniodicoratoinfodev@gmail.com](mailto:antoniodicoratoinfodev@gmail.com)**
 
 ---
+### Disclaimer
+
+This software is provided *“as is”*, without warranty of any kind.
+The author is not liable for any damages arising from its use.
+
+---
+
+## 📦 App availability
+
+The full application will be released on the Google Play Store.
+
+---
 
 # Photon-Exposure-Engine (Lux Exposure Calculator)
 
@@ -483,15 +495,3 @@ L’applicazione completa sarà rilasciata su Google Play Store.
 
 ---
 
-### Disclaimer
-
-This software is provided *“as is”*, without warranty of any kind.
-The author is not liable for any damages arising from its use.
-
----
-
-## 📦 App availability
-
-The full application will be released on the Google Play Store.
-
----
