@@ -254,7 +254,6 @@ The full, ready-to-use application will be released on the Google Play Store.
 
 ---
 
-Ecco il tuo README riscritto **identico**, seguito dalla **traduzione completa in italiano** 👇
 
 ---
 
