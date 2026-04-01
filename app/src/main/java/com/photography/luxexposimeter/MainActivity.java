@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,6 +19,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 import java.util.Locale;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * MainActivity — Convertitore Lux → Triade Esposimetrica
@@ -37,6 +42,7 @@ import java.util.Locale;
  *   - Tabella delle combinazioni equivalenti
  *   - Descrizione della scena in base all'EV
  */
+
 public class MainActivity extends AppCompatActivity {
 
     // ─── Widget ───────────────────────────────────────────────────────────────
@@ -95,12 +101,10 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < isoValues.length; i++) {
             isoLabels[i] = "ISO " + isoValues[i];
         }
-        ArrayAdapter<String> isoAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, isoLabels);
+        ArrayAdapter<String> isoAdapter = createWhiteTextAdapter(isoLabels);
         isoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerISO.setAdapter(isoAdapter);
-        // Default: ISO 100 (indice 4)
-        spinnerISO.setSelection(4);
+        spinnerISO.setSelection(4); // ISO 100
 
         // F-stop
         double[] fStops = ExposureCalculator.STANDARD_F_STOPS;
@@ -108,12 +112,10 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < fStops.length; i++) {
             fStopLabels[i] = ExposureCalculator.formatFNumber(fStops[i]);
         }
-        ArrayAdapter<String> fStopAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, fStopLabels);
+        ArrayAdapter<String> fStopAdapter = createWhiteTextAdapter(fStopLabels);
         fStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFStop.setAdapter(fStopAdapter);
-        // Default: f/5.6 (indice 11)
-        spinnerFStop.setSelection(11);
+        spinnerFStop.setSelection(11); // f/5.6
 
         // Shutter speeds
         double[] shutters = ExposureCalculator.STANDARD_SHUTTER_SPEEDS;
@@ -121,18 +123,39 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < shutters.length; i++) {
             shutterLabels[i] = ExposureCalculator.formatShutterSpeed(shutters[i]);
         }
-        ArrayAdapter<String> shutterAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, shutterLabels);
+        ArrayAdapter<String> shutterAdapter = createWhiteTextAdapter(shutterLabels);
         shutterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerShutter.setAdapter(shutterAdapter);
-        // Default: 1/125 (indice 36)
-        spinnerShutter.setSelection(36);
+        spinnerShutter.setSelection(36); // 1/125
     }
 
     // ─── Listener ─────────────────────────────────────────────────────────────
     private void setupListeners() {
         btnCalcFromFStop.setOnClickListener(v -> calculateFromFStop());
         btnCalcFromShutter.setOnClickListener(v -> calculateFromShutter());
+    }
+
+    private ArrayAdapter<String> createWhiteTextAdapter(String[] items) {
+        return new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView text = view.findViewById(android.R.id.text1);
+                text.setTextColor(getResources().getColor(R.color.text_primary));
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView text = view.findViewById(android.R.id.text1);
+                text.setTextColor(getResources().getColor(R.color.text_primary));
+                // Imposta lo sfondo del menu a tendina (dropdown) per renderlo coerente con il tema scuro
+                text.setBackgroundColor(getResources().getColor(R.color.card_bg));
+                return view;
+            }
+        };
     }
 
     // ─── Calcolo: fisso il diaframma, calcola il tempo ────────────────────────
