@@ -15,14 +15,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 import java.util.Locale;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * MainActivity — Convertitore Lux → Triade Esposimetrica
@@ -42,16 +40,15 @@ import androidx.annotation.Nullable;
  *   - Tabella delle combinazioni equivalenti
  *   - Descrizione della scena in base all'EV
  */
-
 public class MainActivity extends AppCompatActivity {
 
     // ─── Widget ───────────────────────────────────────────────────────────────
     private EditText etLux;
-    private Spinner  spinnerISO;
-    private Spinner  spinnerFStop;
-    private Spinner  spinnerShutter;
-    private Button   btnCalcFromFStop;
-    private Button   btnCalcFromShutter;
+    private Spinner spinnerISO;
+    private Spinner spinnerFStop;
+    private Spinner spinnerShutter;
+    private Button btnCalcFromFStop;
+    private Button btnCalcFromShutter;
 
     private TextView tvEV100;
     private TextView tvEVISO;
@@ -78,18 +75,18 @@ public class MainActivity extends AppCompatActivity {
 
     // ─── Binding ──────────────────────────────────────────────────────────────
     private void bindViews() {
-        etLux               = findViewById(R.id.etLux);
-        spinnerISO          = findViewById(R.id.spinnerISO);
-        spinnerFStop        = findViewById(R.id.spinnerFStop);
-        spinnerShutter      = findViewById(R.id.spinnerShutter);
-        btnCalcFromFStop    = findViewById(R.id.btnCalcFromFStop);
-        btnCalcFromShutter  = findViewById(R.id.btnCalcFromShutter);
-        tvEV100             = findViewById(R.id.tvEV100);
-        tvEVISO             = findViewById(R.id.tvEVISO);
-        tvFNumber           = findViewById(R.id.tvFNumber);
-        tvShutterSpeed      = findViewById(R.id.tvShutterSpeed);
-        tvSceneDescription  = findViewById(R.id.tvSceneDescription);
-        layoutEquivalents   = findViewById(R.id.layoutEquivalents);
+        etLux = findViewById(R.id.etLux);
+        spinnerISO = findViewById(R.id.spinnerISO);
+        spinnerFStop = findViewById(R.id.spinnerFStop);
+        spinnerShutter = findViewById(R.id.spinnerShutter);
+        btnCalcFromFStop = findViewById(R.id.btnCalcFromFStop);
+        btnCalcFromShutter = findViewById(R.id.btnCalcFromShutter);
+        tvEV100 = findViewById(R.id.tvEV100);
+        tvEVISO = findViewById(R.id.tvEVISO);
+        tvFNumber = findViewById(R.id.tvFNumber);
+        tvShutterSpeed = findViewById(R.id.tvShutterSpeed);
+        tvSceneDescription = findViewById(R.id.tvSceneDescription);
+        layoutEquivalents = findViewById(R.id.layoutEquivalents);
         tvEquivalentsHeader = findViewById(R.id.tvEquivalentsHeader);
     }
 
@@ -151,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView text = view.findViewById(android.R.id.text1);
                 text.setTextColor(getResources().getColor(R.color.text_primary));
-                // Imposta lo sfondo del menu a tendina (dropdown) per renderlo coerente con il tema scuro
                 text.setBackgroundColor(getResources().getColor(R.color.card_bg));
                 return view;
             }
@@ -227,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
                     ExposureCalculator.formatShutterSpeed(result.shutterSpeedStandard)));
         }
 
-        // Descrizione della scena
-        tvSceneDescription.setText(describeScene(result.ev100));
+        // Descrizione della scena usando l'enum (sostituisce il vecchio metodo describeScene)
+        tvSceneDescription.setText(SceneEV.fromEV(result.ev100));
 
         // Combinazioni equivalenti
         buildEquivalentsTable(result.evISO, result.iso);
@@ -255,8 +251,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (double[] combo : combos) {
             double fNum = combo[0];
-            double t    = combo[1];
-            // Verifica: ricalcola EV dalla coppia N,t per confermare la formula
+            double t = combo[1];
             double evCheck = ExposureCalculator.fNumberAndShutterSpeedToEV(fNum, t);
 
             LinearLayout row = makeRow(
@@ -305,22 +300,46 @@ public class MainActivity extends AppCompatActivity {
         return tv;
     }
 
-    // ─── Descrizione della scena in base all'EV₁₀₀ ───────────────────────────
-    private String describeScene(double ev100) {
-        // Tabella di riferimento da Wikipedia "Exposure value" e ANSI PH2.7-1986
-        if (ev100 < -1)  return "Scena: buio totale / soggetti illuminati da candele";
-        if (ev100 < 1)   return "Scena: luce di candele, fiamma, natale";
-        if (ev100 < 3)   return "Scena: interni poco illuminati, luce artificiale tenue";
-        if (ev100 < 5)   return "Scena: interni con illuminazione domestica";
-        if (ev100 < 7)   return "Scena: interni ben illuminati, uffici, negozi";
-        if (ev100 < 9)   return "Scena: illuminazione stradale notturna, neon";
-        if (ev100 < 11)  return "Scena: cielo coperto, ombra profonda all'aperto";
-        if (ev100 < 12)  return "Scena: cielo nuvoloso, luce diffusa";
-        if (ev100 < 13)  return "Scena: sole velato, luce morbida";
-        if (ev100 < 14)  return "Scena: luce solare diretta, ombra leggera";
-        if (ev100 < 15)  return "Scena: sole pieno, giornata luminosa";
-        if (ev100 < 16)  return "Scena: sole molto intenso, spiaggia / neve";
-        return               "Scena: luce estremamente intensa (riflesso solare, arco voltaico)";
+    // ─── ENUM per la descrizione della scena (sostituisce il vecchio metodo if/else) ───
+    private enum SceneEV {
+        EXTREME_DARK(-1.0, "Scene: total darkness / subjects lit by candles"),
+        CANDLE_LIGHT(1.0, "Scene: candle light, flame, Christmas"),
+        DIM_INTERIOR(3.0, "Scene: dimly lit interiors, soft artificial light"),
+        HOME_INTERIOR(5.0, "Scene: interiors with domestic lighting"),
+        BRIGHT_INTERIOR(7.0, "Scene: well-lit interiors, offices, shops"),
+        NIGHT_STREET(9.0, "Scene: night street lighting, neon"),
+        OVERCAST_SHADE(11.0, "Scene: overcast sky, deep outdoor shade"),
+        CLOUDY(12.0, "Scene: cloudy sky, diffused light"),
+        LIGHT_CLOUD(13.0, "Scene: veiled sun, soft light"),
+        DIRECT_SUN_LIGHT(14.0, "Scene: direct sunlight, light shadow"),
+        FULL_SUN(15.0, "Scene: full sun, bright day"),
+        VERY_BRIGHT_SUN(16.0, "Scene: very intense sun, beach / snow"),
+        EXTREME_LIGHT(Double.MAX_VALUE, "Scene: extremely intense light (solar reflection, arc lamp)");
+
+        private final double upperBound; // limite superiore (escluso per l'ultimo)
+        private final String description;
+
+        SceneEV(double upperBound, String description) {
+            this.upperBound = upperBound;
+            this.description = description;
+        }
+
+        /**
+         * Restituisce la descrizione della scena in base all'EV a ISO 100.
+         * I range sono identici a quelli del vecchio metodo describeScene().
+         *
+         * @param ev100 Valore EV (riferito a ISO 100)
+         * @return descrizione testuale
+         */
+        public static String fromEV(double ev100) {
+            for (SceneEV scene : values()) {
+                if (ev100 < scene.upperBound) {
+                    return scene.description;
+                }
+            }
+            // fallback (non dovrebbe accadere mai)
+            return EXTREME_LIGHT.description;
+        }
     }
 
     // ─── Utility ──────────────────────────────────────────────────────────────
