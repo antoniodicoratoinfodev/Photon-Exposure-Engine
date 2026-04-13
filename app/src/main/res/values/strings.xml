@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Lux → Triade Esposimetrica</string>
-    <string name="subtitle">Convertitore fotografico professionale</string>
+    <string name="app_name">Photon Exposure Engine</string>
+    <string name="subtitle">Professional photo converter</string>
 
     <!-- Input -->
-    <string name="label_lux_input">Illuminamento misurato (lux)</string>
-    <string name="hint_lux">es. 1250</string>
-    <string name="lux_formula_note">Formula: EV₁₀₀ = log₂(E / 2.5)  |  C = 250 (ANSI/ISO, sensore piano)</string>
+    <string name="label_lux_input">Metering (lux)</string>
+    <string name="hint_lux">e.g. 1250</string>
+    <string name="lux_formula_note">Formula: EV₁₀₀ = log₂(E / 2.5)  |  C = 250 (ANSI/ISO, flat sensor)</string>
 
     <!-- ISO -->
-    <string name="label_iso">Sensibilità ISO</string>
+    <string name="label_iso">ISO sensitivity </string>
 
     <!-- Modalità A -->
-    <string name="mode_a_title">Modalità A — Priorità diaframma</string>
-    <string name="mode_a_desc">Scegli il diaframma: l\'app calcola il tempo di esposizione</string>
-    <string name="label_fstop">Diaframma (f-number)</string>
-    <string name="btn_calc_fstop">CALCOLA TEMPO DI ESPOSIZIONE</string>
+    <string name="mode_a_title"> A mode – Aperture priority</string>
+    <string name="mode_a_desc">Choose the aperture: the app calculates the exposure time</string>
+    <string name="label_fstop"> Aperture (f-number)</string>
+    <string name="btn_calc_fstop">CALCULATE EXPOSURE TIME</string>
 
     <!-- Modalità B -->
-    <string name="mode_b_title">Modalità B — Priorità otturatore</string>
-    <string name="mode_b_desc">Scegli il tempo: l\'app calcola il diaframma</string>
-    <string name="label_shutter">Tempo di esposizione</string>
-    <string name="btn_calc_shutter">CALCOLA DIAFRAMMA</string>
+    <string name="mode_b_title"> B mode – Shutter priority</string>
+    <string name="mode_b_desc">Choose the shutter speed: the app calculates the aperture</string>
+    <string name="label_shutter">Shutter speed</string>
+    <string name="btn_calc_shutter">CALCULATE APERTURE</string>
 
     <!-- Risultati -->
-    <string name="results_title">Risultati</string>
+    <string name="results_title">Results</string>
     <string name="placeholder_ev100">EV₁₀₀ = —</string>
     <string name="placeholder_ev_iso">EV (ISO) = —</string>
-    <string name="placeholder_fnumber">Diaframma: —</string>
-    <string name="placeholder_shutter">Tempo: —</string>
-    <string name="placeholder_scene">Descrizione scena: —</string>
+    <string name="placeholder_fnumber">Aperture: —</string>
+    <string name="placeholder_shutter">Shutter speed: —</string>
+    <string name="placeholder_scene">Scene description: —</string>
 
     <!-- Combinazioni equivalenti -->
-    <string name="equivalents_title">Combinazioni equivalenti</string>
+    <string name="equivalents_title">Equivalent combinations</string>
 
     <!-- Formule -->
-    <string name="formula_title">Riferimento formule matematiche</string>
+    <string name="formula_title">Mathematical formulas reference</string>
     <string name="formula_content">
 EV₁₀₀ = log₂(E / 2.5)
-  E = illuminamento in lux
-  C = 250 (costante ANSI/ISO, sensore piano)
+
+E = illuminance in lux
+C = 250 (ANSI/ISO constant, flat sensor)
 
 EV_ISO = EV₁₀₀ + log₂(ISO / 100)
 
 EV = log₂(N² / t)
-  N = f-number (diaframma)
-  t = tempo esposizione (secondi)
 
-Dato EV e N:  t = N² / 2^EV
-Dato EV e t:  N = √(t × 2^EV)
+N = f-number (aperture)
+t = exposure time (seconds)
 
-Fonte: Wikipedia "Exposure value",
+Given EV and N: t = N² / 2^EV
+Given EV and t: N = √(t × 2^EV)
+
+Source: Wikipedia "Exposure value",
 ANSI PH3.49-1971, ISO 2720:1974
     </string>
 </resources>
