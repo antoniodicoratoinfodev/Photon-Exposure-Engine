@@ -7,7 +7,8 @@
     <string name="label_lux_input">Metering (lux)</string>
     <string name="hint_lux">e.g. 1250</string>
     <string name="lux_formula_note">Formula: EV₁₀₀ = log₂(E / 2.5)  |  C = 250 (ANSI/ISO, flat sensor)</string>
-
+    <!-- Nuova stringa per l'unità lux -->
+    <string name="lux_unit"> lx</string>
     <!-- ISO -->
     <string name="label_iso">ISO sensitivity </string>
 

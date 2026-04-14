@@ -79,15 +79,17 @@
                         android:textColorHint="@color/text_secondary"
                         android:backgroundTint="@color/accent_blue"
                         android:textSize="18sp"
-                        android:padding="10dp"/>
+                        android:padding="10dp"
+                        android:autofillHints="number" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" lx"
+                        android:text="@string/lux_unit"
                         android:textColor="@color/text_secondary"
                         android:textSize="18sp"
-                        android:paddingStart="8dp"/>
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp" />
 
                 </LinearLayout>
 
@@ -192,10 +194,10 @@
                     android:id="@+id/btnCalcFromFStop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#AD4F8FC1"
                     android:text="@string/btn_calc_fstop"
-                    android:backgroundTint="@color/accent_blue"
                     android:textColor="@color/text_primary"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -254,10 +256,10 @@
                     android:id="@+id/btnCalcFromShutter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#C5C86F02"
                     android:text="@string/btn_calc_shutter"
-                    android:backgroundTint="@color/accent_orange"
                     android:textColor="@color/text_primary"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
