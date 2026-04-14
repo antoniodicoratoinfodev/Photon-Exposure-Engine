@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Photon Exposure Engine</string>
-    <string name="subtitle">Professional photo converter</string>
+    <string name="app_name">PHOTON EXPOSURE ENGINE</string>
+    <string name="subtitle">Professional Photo Converter</string>
 
     <!-- Input -->
     <string name="label_lux_input">Metering (lux)</string>
