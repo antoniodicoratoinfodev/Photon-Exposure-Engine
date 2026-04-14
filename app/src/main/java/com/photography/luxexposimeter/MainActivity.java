@@ -202,11 +202,11 @@ public class MainActivity extends AppCompatActivity {
         // Diaframma
         if (fixedFStop) {
             tvFNumber.setText(String.format(Locale.getDefault(),
-                    "Diaframma: %s  (scelto)",
+                    "Aperture: %s  (selected)",
                     ExposureCalculator.formatFNumber(result.fNumber)));
         } else {
             tvFNumber.setText(String.format(Locale.getDefault(),
-                    "Diaframma: %s  (calcolato) → std: %s",
+                    "Aperture: %s  (calculated value) → std: %s",
                     ExposureCalculator.formatFNumber(result.fNumber),
                     ExposureCalculator.formatFNumber(result.fNumberStandard)));
         }
@@ -214,11 +214,11 @@ public class MainActivity extends AppCompatActivity {
         // Tempo di esposizione
         if (!fixedFStop) {
             tvShutterSpeed.setText(String.format(Locale.getDefault(),
-                    "Tempo: %s  (scelto)",
+                    "Shutter speed: %s  (selected)",
                     ExposureCalculator.formatShutterSpeed(result.shutterSpeed)));
         } else {
             tvShutterSpeed.setText(String.format(Locale.getDefault(),
-                    "Tempo: %s  (calcolato) → std: %s",
+                    "Shutter speed: %s  (calculated value) → std: %s",
                     ExposureCalculator.formatShutterSpeed(result.shutterSpeed),
                     ExposureCalculator.formatShutterSpeed(result.shutterSpeedStandard)));
         }
@@ -237,16 +237,16 @@ public class MainActivity extends AppCompatActivity {
         List<double[]> combos = ExposureCalculator.getEquivalentCombinations(evISO);
 
         if (combos.isEmpty()) {
-            tvEquivalentsHeader.setText("Nessuna combinazione standard nel range fotografico.");
+            tvEquivalentsHeader.setText("No standard combinations within the photographic range.");
             return;
         }
 
         tvEquivalentsHeader.setText(String.format(Locale.getDefault(),
-                "Combinazioni equivalenti (EV %.1f, ISO %d):", evISO, iso));
+                "Equivalent combinations (EV %.1f, ISO %d):", evISO, iso));
 
         // Intestazione tabella
         LinearLayout header = makeRow(
-                "Diaframma", "Tempo", "EV verifica", true);
+                "Aperture", "Shutter speed", "EV validation", true);
         layoutEquivalents.addView(header);
 
         for (double[] combo : combos) {
@@ -302,19 +302,19 @@ public class MainActivity extends AppCompatActivity {
 
     // ─── ENUM per la descrizione della scena (sostituisce il vecchio metodo if/else) ───
     private enum SceneEV {
-        EXTREME_DARK(-1.0, "Scene: total darkness / subjects lit by candles"),
-        CANDLE_LIGHT(1.0, "Scene: candle light, flame, Christmas"),
-        DIM_INTERIOR(3.0, "Scene: dimly lit interiors, soft artificial light"),
-        HOME_INTERIOR(5.0, "Scene: interiors with domestic lighting"),
-        BRIGHT_INTERIOR(7.0, "Scene: well-lit interiors, offices, shops"),
-        NIGHT_STREET(9.0, "Scene: night street lighting, neon"),
-        OVERCAST_SHADE(11.0, "Scene: overcast sky, deep outdoor shade"),
-        CLOUDY(12.0, "Scene: cloudy sky, diffused light"),
-        LIGHT_CLOUD(13.0, "Scene: veiled sun, soft light"),
-        DIRECT_SUN_LIGHT(14.0, "Scene: direct sunlight, light shadow"),
-        FULL_SUN(15.0, "Scene: full sun, bright day"),
-        VERY_BRIGHT_SUN(16.0, "Scene: very intense sun, beach / snow"),
-        EXTREME_LIGHT(Double.MAX_VALUE, "Scene: extremely intense light (solar reflection, arc lamp)");
+        EXTREME_DARK(-1.0, "Total darkness, candlelight only"),
+        CANDLELIGHT(1.0, "Candlelight, flame, very low light"),
+        DIM_INTERIOR(3.0, "Dim interior lighting, low light"),
+        HOME_INTERIOR(5.0, "Indoor lighting, typical home illumination"),
+        BRIGHT_INTERIOR(7.0, "Well-lit interiors, offices, retail spaces"),
+        NIGHT_STREET(9.0, "Night street lighting, neon signs, urban night scene"),
+        OVERCAST_SHADE(11.0, "Heavy overcast, deep open shade"),
+        CLOUDY(12.0, "Overcast sky, soft diffused daylight"),
+        LIGHT_CLOUD(13.0, "Thin cloud cover, soft daylight, veiled sun"),
+        DIRECT_SUN(14.0, "Direct sunlight, slight shadows"),
+        FULL_SUN(15.0, "Full sunlight, clear day"),
+        BRIGHT_SUN_REFLECTED(16.0, "Very bright sunlight, sand/snow reflections"),
+        EXTREME_LIGHT(Double.MAX_VALUE, "Extreme brightness, strong reflections (snow, desert, arc lamps)");
 
         private final double upperBound; // limite superiore (escluso per l'ultimo)
         private final String description;
@@ -346,18 +346,18 @@ public class MainActivity extends AppCompatActivity {
     private double parseLux() {
         String text = etLux.getText().toString().trim();
         if (text.isEmpty()) {
-            showError("Inserisci un valore in lux.");
+            showError("Enter a value in lux.");
             return -1;
         }
         try {
             double lux = Double.parseDouble(text);
             if (lux <= 0) {
-                showError("Il valore lux deve essere maggiore di zero.");
+                showError("The lux value must be greater than zero.");
                 return -1;
             }
             return lux;
         } catch (NumberFormatException e) {
-            showError("Valore lux non valido.");
+            showError("Invalid lux value.");
             return -1;
         }
     }
