@@ -1,5 +1,4 @@
 
-```markdown
 # Photon-Exposure-Engine (Lux Exposure Calculator)
 
 **Android App (Java) — Professional Photography Exposure Converter**
