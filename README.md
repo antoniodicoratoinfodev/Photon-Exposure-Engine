@@ -251,7 +251,7 @@ The full application will be available for purchase on the Google Play Store.
 
 # Photon-Exposure-Engine (Lux Exposure Calculator)
 
-**App Android (Java) — Convertitore Professionale di Esposizione Fotografica**
+**App Android (Java) — Convertitore Professionale per Esposizione Fotografica**
 
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
