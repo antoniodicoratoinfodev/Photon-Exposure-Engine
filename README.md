@@ -496,5 +496,3 @@ L’autore non è responsabile per eventuali danni derivanti dal suo utilizzo.
 ## 📦 Disponibilità dell’app
 
 L’applicazione completa sarà disponibile per l’acquisto sul Google Play Store.
-```
-
