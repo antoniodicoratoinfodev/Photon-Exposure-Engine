@@ -6,7 +6,7 @@
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
 > ⚠️ **IMPORTANT – READ THIS FIRST**  
-> This source code is made public **ONLY FOR VIEWING AND EDUCATIONAL INSPECTION**.  
+> This source code is made public **ONLY FOR VIEWING AND EDUCATIONAL PURPOSE**.  
 > You are **NOT PERMITTED** to run, execute, deploy, or use this software for its intended purpose (exposure calculation) unless you purchase the official commercial version from the Google Play Store.  
 > See the [LICENSE](./LICENSE.md) file for full legal terms.
 
@@ -471,8 +471,8 @@ java ExposureCalculatorTest
 
 Copyright © 2026 Antonio Dicorato. Tutti i diritti riservati.
 
-Questo codice sorgente è reso pubblico su GitHub **ESCLUSIVAMENTE PER VISUALIZZAZIONE E ISPEZIONE EDUCATIVA**.  
-Puoi navigare, fare fork e studiare il codice come consentito dai Termini di Servizio di GitHub.
+Questo codice sorgente è reso pubblico su GitHub **ESCLUSIVAMENTE PER VISUALIZZAZIONE, PER FINI EDUCATIVI E DIDATTICI**.  
+
 
 **È SEVERAMENTE VIETATO:**
 
