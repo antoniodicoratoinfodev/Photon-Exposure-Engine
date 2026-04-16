@@ -1,14 +1,17 @@
+
+```markdown
 # Photon-Exposure-Engine (Lux Exposure Calculator)
 
 **Android App (Java) — Professional Photography Exposure Converter**
 
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
-Converts an illuminance value in lux (measured by a light meter) into the photographic exposure triad: **ISO**, **aperture (f-number)**, and **shutter speed**.
+> ⚠️ **IMPORTANT – READ THIS FIRST**  
+> This source code is made public **ONLY FOR VIEWING AND EDUCATIONAL INSPECTION**.  
+> You are **NOT PERMITTED** to run, execute, deploy, or use this software for its intended purpose (exposure calculation) unless you purchase the official commercial version from the Google Play Store.  
+> See the [LICENSE](./LICENSE) file for full legal terms.
 
-> **Note:** This source code is publicly available **for educational and portfolio purposes only**.
-> The full application will be available for purchase on the Google Play Store.
-> No commercial use, redistribution, or derivative works are permitted without explicit written permission.
+Converts an illuminance value in lux (measured by a light meter) into the photographic exposure triad: **ISO**, **aperture (f-number)**, and **shutter speed**.
 
 ---
 
@@ -16,14 +19,14 @@ Converts an illuminance value in lux (measured by a light meter) into the photog
 
 This repository contains the full source code for the **Photon-Exposure-Engine (Lux Exposure Calculator)** app.
 
-It is published to:
+It is published **solely** to:
 
 * Showcase development skills
-* Serve as a learning resource for photographers and developers
+* Serve as a learning resource for photographers and developers (code reading only)
 * Document the mathematical foundation behind exposure calculation
 
-The **official, ready-to-use version** will be released on the Google Play Store.
-The source code is **not licensed for commercial use**.
+**The source code is NOT licensed for any form of use as an application.**  
+The official, ready-to-use version is available for purchase on the Google Play Store.
 
 ---
 
@@ -93,7 +96,7 @@ All combinations `(N, t)` satisfying:
 EV = log2(N² / t)
 ```
 
-produce the **same exposure**.
+produce the **same exposure**.  
 The app includes a table of equivalent combinations to demonstrate this principle.
 
 ---
@@ -167,7 +170,8 @@ Photon-Exposure-Engine/
 4. Connect a device (API 21+) or start an emulator
 5. Press **Run** ▶
 
----
+> **Reminder:** Importing and building the project is allowed for code inspection only.  
+> Running the compiled app on a device is **prohibited** without purchasing the commercial version.
 
 ### Requirements
 
@@ -206,7 +210,6 @@ java ExposureCalculatorTest
 
 * `C = 250` is valid for **flat (cosine) sensors**
 * Hemispherical sensors use:
-
   * `C = 320` (Minolta)
   * `C = 340` (Sekonic)
 * Standard f-numbers follow ISO photographic scale (including 1/3 and 1/2 stops)
@@ -219,30 +222,31 @@ java ExposureCalculatorTest
 
 Copyright © 2026 Antonio Dicorato. All rights reserved.
 
-This source code is provided **exclusively for educational and portfolio purposes**.
+This source code is made publicly available on GitHub **SOLELY FOR VIEWING AND EDUCATIONAL INSPECTION**.  
+You may browse, fork, and study the code as permitted by GitHub's Terms of Service.
 
-You are **not permitted** to:
+**You are strictly PROHIBITED from:**
 
-* Use it commercially
-* Modify or redistribute
-* Create derivative works
+- Running, executing, or deploying this software for any purpose.
+- Using the application for its intended photographic exposure calculation purpose or any similar real-world functionality.
+- Copying, modifying, or creating derivative works of the code.
+- Distributing, sublicensing, or making the software available to third parties in any compiled or executable form.
 
-without explicit written permission.
+If you wish to use this application for its intended purpose (exposure calculation, photography assistance, or any practical functionality), you **MUST purchase the commercial version** from the Google Play Store. The commercial version is the only authorized way to use the software as an application.
 
-For licensing inquiries or collaborations:
+For commercial licensing or permission requests:  
 **[antoniodicoratoinfodev@gmail.com](mailto:antoniodicoratoinfodev@gmail.com)**
 
----
 ### Disclaimer
 
-This software is provided *“as is”*, without warranty of any kind.
+This software is provided *“as is”*, without warranty of any kind.  
 The author is not liable for any damages arising from its use.
 
 ---
 
 ## 📦 App availability
 
-The full application will be released on the Google Play Store.
+The full application will be available for purchase on the Google Play Store.
 
 ---
 
@@ -252,11 +256,12 @@ The full application will be released on the Google Play Store.
 
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
-Converte un valore di illuminamento in lux (misurato con un luxmetro) nella triade fotografica dell’esposizione: **ISO**, **apertura (f-number)** e **tempo di esposizione**.
+> ⚠️ **IMPORTANTE – LEGGI PRIMA**  
+> Questo codice sorgente è reso pubblico **SOLO PER VISUALIZZAZIONE E ISPEZIONE EDUCATIVA**.  
+> **NON È CONSENTITO** eseguire, avviare, distribuire o usare questo software per il suo scopo principale (calcolo dell’esposizione) a meno che non si acquisti la versione commerciale ufficiale dal Google Play Store.  
+> Consulta il file [LICENSE](./LICENSE) per i termini legali completi.
 
-> **Nota:** Questo codice sorgente è reso pubblico **solo a scopo educativo e per portfolio**.
-> L’applicazione completa sarà disponibile per l’acquisto su Google Play Store.
-> Non è consentito alcun uso commerciale, ridistribuzione o opere derivate senza autorizzazione scritta esplicita.
+Converte un valore di illuminamento in lux (misurato con un luxmetro) nella triade fotografica dell’esposizione: **ISO**, **apertura (f-number)** e **tempo di esposizione**.
 
 ---
 
@@ -264,14 +269,14 @@ Converte un valore di illuminamento in lux (misurato con un luxmetro) nella tria
 
 Questo repository contiene il codice sorgente completo dell’app **Photon-Exposure-Engine (Lux Exposure Calculator)**.
 
-È pubblicato per:
+È pubblicato **esclusivamente** per:
 
 * Mostrare competenze di sviluppo
-* Servire come risorsa didattica per fotografi e sviluppatori
+* Servire come risorsa didattica per fotografi e sviluppatori (sola lettura del codice)
 * Documentare le basi matematiche del calcolo dell’esposizione
 
-La **versione ufficiale e pronta all’uso** sarà rilasciata su Google Play Store.
-Il codice sorgente **non è autorizzato per uso commerciale**.
+**Il codice sorgente NON è concesso in licenza per alcuna forma di utilizzo come applicazione.**  
+La versione ufficiale e pronta all’uso è disponibile per l’acquisto su Google Play Store.
 
 ---
 
@@ -341,7 +346,7 @@ Tutte le combinazioni `(N, t)` che soddisfano:
 EV = log2(N² / t)
 ```
 
-producono la **stessa esposizione**.
+producono la **stessa esposizione**.  
 L’app include una tabella di combinazioni equivalenti per dimostrare questo principio.
 
 ---
@@ -415,7 +420,8 @@ Photon-Exposure-Engine/
 4. Collegare un dispositivo (API 21+) o avviare un emulatore
 5. Premere **Run** ▶
 
----
+> **Promemoria:** L’importazione e la compilazione del progetto sono consentite solo per ispezione del codice.  
+> L’esecuzione dell’app compilata su un dispositivo è **vietata** senza l’acquisto della versione commerciale.
 
 ### Requisiti
 
@@ -454,7 +460,6 @@ java ExposureCalculatorTest
 
 * `C = 250` è valido per **sensori flat (cosine)**
 * Sensori emisferici utilizzano:
-
   * `C = 320` (Minolta)
   * `C = 340` (Sekonic)
 * I f-number standard seguono la scala fotografica ISO (inclusi 1/3 e 1/2 stop)
@@ -467,31 +472,31 @@ java ExposureCalculatorTest
 
 Copyright © 2026 Antonio Dicorato. Tutti i diritti riservati.
 
-Questo codice sorgente è fornito **esclusivamente a scopo educativo e per portfolio**.
+Questo codice sorgente è reso pubblico su GitHub **ESCLUSIVAMENTE PER VISUALIZZAZIONE E ISPEZIONE EDUCATIVA**.  
+Puoi navigare, fare fork e studiare il codice come consentito dai Termini di Servizio di GitHub.
 
-Non è consentito:
+**È SEVERAMENTE VIETATO:**
 
-* Uso commerciale
-* Modifica o ridistribuzione
-* Creazione di opere derivate
+- Eseguire, avviare o distribuire questo software per qualsiasi scopo.
+- Utilizzare l’applicazione per il suo scopo previsto (calcolo dell’esposizione fotografica o qualsiasi funzionalità simile nel mondo reale).
+- Copiare, modificare o creare opere derivate dal codice.
+- Distribuire, concedere in sublicenza o mettere il software a disposizione di terzi in forma compilata o eseguibile.
 
-senza autorizzazione scritta esplicita.
+Se desideri utilizzare questa applicazione per il suo scopo principale (calcolo dell’esposizione, assistenza fotografica o qualsiasi funzionalità pratica), **DEVI ACQUISTARE la versione commerciale** dal Google Play Store. La versione commerciale è l’unico modo autorizzato per usare il software come applicazione.
 
-Per richieste di licenza o collaborazioni:
+Per richieste di licenza commerciale o autorizzazioni:  
 **[antoniodicoratoinfodev@gmail.com](mailto:antoniodicoratoinfodev@gmail.com)**
-
----
 
 ### Disclaimer
 
-Questo software è fornito *“così com’è”*, senza alcuna garanzia.
+Questo software è fornito *“così com’è”*, senza alcuna garanzia.  
 L’autore non è responsabile per eventuali danni derivanti dal suo utilizzo.
 
 ---
 
 ## 📦 Disponibilità dell’app
 
-L’applicazione completa sarà rilasciata su Google Play Store.
+L’applicazione completa sarà disponibile per l’acquisto sul Google Play Store.
+```
 
 ---
-
