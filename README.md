@@ -6,7 +6,7 @@
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
 > ⚠️ **IMPORTANT – READ THIS FIRST**  
-> This source code is made public **ONLY FOR VIEWING AND EDUCATIONAL PURPOSE**.  
+> This source code is made public **ONLY FOR VIEWING AND EDUCATIONAL PURPOSES**.  
 > You are **NOT PERMITTED** to run, execute, deploy, or use this software for its intended purpose (exposure calculation) unless you purchase the official commercial version from the Google Play Store.  
 > See the [LICENSE](./LICENSE.md) file for full legal terms.
 
