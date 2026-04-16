@@ -256,7 +256,7 @@ The full application will be available for purchase on the Google Play Store.
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
 > ⚠️ **IMPORTANTE – LEGGI PRIMA**  
-> Questo codice sorgente è reso pubblico **SOLO PER VISUALIZZAZIONE E ISPEZIONE EDUCATIVA**.  
+> Questo codice sorgente è reso pubblico **SOLO PER VISUALIZZAZIONE E PER FINI EDUCATIVI**.  
 > **NON È CONSENTITO** eseguire, avviare, distribuire o usare questo software per il suo scopo principale (calcolo dell’esposizione) a meno che non si acquisti la versione commerciale ufficiale dal Google Play Store.  
 > Consulta il file [LICENSE](./LICENSE) per i termini legali completi.
 
