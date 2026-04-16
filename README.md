@@ -8,7 +8,7 @@
 > ⚠️ **IMPORTANT – READ THIS FIRST**  
 > This source code is made public **ONLY FOR VIEWING AND EDUCATIONAL INSPECTION**.  
 > You are **NOT PERMITTED** to run, execute, deploy, or use this software for its intended purpose (exposure calculation) unless you purchase the official commercial version from the Google Play Store.  
-> See the [LICENSE](./LICENSE) file for full legal terms.
+> See the [LICENSE](./LICENSE.md) file for full legal terms.
 
 Converts an illuminance value in lux (measured by a light meter) into the photographic exposure triad: **ISO**, **aperture (f-number)**, and **shutter speed**.
 
