@@ -498,4 +498,3 @@ L’autore non è responsabile per eventuali danni derivanti dal suo utilizzo.
 L’applicazione completa sarà disponibile per l’acquisto sul Google Play Store.
 ```
 
----
