@@ -1,4 +1,3 @@
-
 # Photon-Exposure-Engine (Lux Exposure Calculator)
 
 **Android App (Java) — Professional Photography Exposure Converter**
@@ -26,6 +25,14 @@ It is published **solely** to:
 
 **The source code is NOT licensed for any form of use as an application.**  
 The official, ready-to-use version is available for purchase on the Google Play Store.
+
+---
+
+## 📸 Screenshots
+
+| | | |
+|---|---|---|
+| ![Screenshot 1](Samples/1.png) | ![Screenshot 2](Samples/2.png) | ![Screenshot 3](Samples/3.png) |
 
 ---
 
@@ -104,7 +111,7 @@ The app includes a table of equivalent combinations to demonstrate this principl
 
 | Source                       | Description                                     |
 | ---------------------------- | ----------------------------------------------- |
-| Wikipedia – “Exposure value” | Formal EV definition and lux/EV reference table |
+| Wikipedia – "Exposure value" | Formal EV definition and lux/EV reference table |
 | ANSI PH3.49-1971             | Calibration constant C = 250                    |
 | ISO 2720:1974                | International light meter standard              |
 | ANSI PH2.7-1986              | EV reference table for real-world scenes        |
@@ -238,7 +245,7 @@ For commercial licensing or permission requests:
 
 ### Disclaimer
 
-This software is provided *“as is”*, without warranty of any kind.  
+This software is provided *"as is"*, without warranty of any kind.  
 The author is not liable for any damages arising from its use.
 
 ---
@@ -257,25 +264,33 @@ The full application will be available for purchase on the Google Play Store.
 
 > ⚠️ **IMPORTANTE – LEGGI PRIMA**  
 > Questo codice sorgente è reso pubblico **SOLO PER VISUALIZZAZIONE E PER FINI EDUCATIVI**.  
-> **NON È CONSENTITO** eseguire, avviare, distribuire o usare questo software per il suo scopo principale (calcolo dell’esposizione) a meno che non si acquisti la versione commerciale ufficiale dal Google Play Store.  
+> **NON È CONSENTITO** eseguire, avviare, distribuire o usare questo software per il suo scopo principale (calcolo dell'esposizione) a meno che non si acquisti la versione commerciale ufficiale dal Google Play Store.  
 > Consulta il file [LICENSE](./LICENSE.md) per i termini legali completi.
 
-Converte un valore di illuminamento in lux (misurato con un luxmetro) nella triade fotografica dell’esposizione: **ISO**, **apertura (f-number)** e **tempo di esposizione**.
+Converte un valore di illuminamento in lux (misurato con un luxmetro) nella triade fotografica dell'esposizione: **ISO**, **apertura (f-number)** e **tempo di esposizione**.
 
 ---
 
 ## 📱 Informazioni su questo repository
 
-Questo repository contiene il codice sorgente completo dell’app **Photon-Exposure-Engine (Lux Exposure Calculator)**.
+Questo repository contiene il codice sorgente completo dell'app **Photon-Exposure-Engine (Lux Exposure Calculator)**.
 
 È pubblicato **esclusivamente** per:
 
 * Mostrare competenze di sviluppo
 * Servire come risorsa didattica per fotografi e sviluppatori (sola lettura del codice)
-* Documentare le basi matematiche del calcolo dell’esposizione
+* Documentare le basi matematiche del calcolo dell'esposizione
 
 **Il codice sorgente NON è concesso in licenza per alcuna forma di utilizzo come applicazione.**  
-La versione ufficiale e pronta all’uso è disponibile per l’acquisto su Google Play Store.
+La versione ufficiale e pronta all'uso è disponibile per l'acquisto su Google Play Store.
+
+---
+
+## 📸 Screenshot
+
+| | | |
+|---|---|---|
+| ![Screenshot 1](Samples/1.png) | ![Screenshot 2](Samples/2.png) | ![Screenshot 3](Samples/3.png) |
 
 ---
 
@@ -306,7 +321,7 @@ E = 2.5 × 2^EV100
 EV_ISO = EV100 + log2(ISO / 100)
 ```
 
-Raddoppiare l’ISO aumenta l’esposizione di **+1 EV (uno stop)**.
+Raddoppiare l'ISO aumenta l'esposizione di **+1 EV (uno stop)**.
 
 ---
 
@@ -346,7 +361,7 @@ EV = log2(N² / t)
 ```
 
 producono la **stessa esposizione**.  
-L’app include una tabella di combinazioni equivalenti per dimostrare questo principio.
+L'app include una tabella di combinazioni equivalenti per dimostrare questo principio.
 
 ---
 
@@ -354,7 +369,7 @@ L’app include una tabella di combinazioni equivalenti per dimostrare questo pr
 
 | Fonte                        | Descrizione                                               |
 | ---------------------------- | --------------------------------------------------------- |
-| Wikipedia – “Exposure value” | Definizione formale di EV e tabella di riferimento lux/EV |
+| Wikipedia – "Exposure value" | Definizione formale di EV e tabella di riferimento lux/EV |
 | ANSI PH3.49-1971             | Costante di calibrazione C = 250                          |
 | ISO 2720:1974                | Standard internazionale per luxmetri                      |
 | ANSI PH2.7-1986              | Tabella di riferimento EV per scene reali                 |
@@ -386,7 +401,7 @@ Photon-Exposure-Engine/
 
 ---
 
-## ⚙️ Funzionalità dell’app
+## ⚙️ Funzionalità dell'app
 
 ### Input
 
@@ -419,8 +434,8 @@ Photon-Exposure-Engine/
 4. Collegare un dispositivo (API 21+) o avviare un emulatore
 5. Premere **Run** ▶
 
-> **Promemoria:** L’importazione e la compilazione del progetto sono consentite solo per ispezione del codice.  
-> L’esecuzione dell’app compilata su un dispositivo è **vietata** senza l’acquisto della versione commerciale.
+> **Promemoria:** L'importazione e la compilazione del progetto sono consentite solo per ispezione del codice.  
+> L'esecuzione dell'app compilata su un dispositivo è **vietata** senza l'acquisto della versione commerciale.
 
 ### Requisiti
 
@@ -471,28 +486,27 @@ java ExposureCalculatorTest
 
 Copyright © 2026 Antonio Dicorato. Tutti i diritti riservati.
 
-Questo codice sorgente è reso pubblico su GitHub **ESCLUSIVAMENTE PER VISUALIZZAZIONE, PER FINI EDUCATIVI E DIDATTICI**.  
-
+Questo codice sorgente è reso pubblico su GitHub **ESCLUSIVAMENTE PER VISUALIZZAZIONE, PER FINI EDUCATIVI E DIDATTICI**.
 
 **È SEVERAMENTE VIETATO:**
 
 - Eseguire, avviare o distribuire questo software per qualsiasi scopo.
-- Utilizzare l’applicazione per il suo scopo previsto (calcolo dell’esposizione fotografica o qualsiasi funzionalità simile nel mondo reale).
+- Utilizzare l'applicazione per il suo scopo previsto (calcolo dell'esposizione fotografica o qualsiasi funzionalità simile nel mondo reale).
 - Copiare, modificare o creare opere derivate dal codice.
 - Distribuire, concedere in sublicenza o mettere il software a disposizione di terzi in forma compilata o eseguibile.
 
-Se desideri utilizzare questa applicazione per il suo scopo principale (calcolo dell’esposizione, assistenza fotografica o qualsiasi funzionalità pratica), **DEVI ACQUISTARE la versione commerciale** dal Google Play Store. La versione commerciale è l’unico modo autorizzato per usare il software come applicazione.
+Se desideri utilizzare questa applicazione per il suo scopo principale (calcolo dell'esposizione, assistenza fotografica o qualsiasi funzionalità pratica), **DEVI ACQUISTARE la versione commerciale** dal Google Play Store. La versione commerciale è l'unico modo autorizzato per usare il software come applicazione.
 
 Per richieste di licenza commerciale o autorizzazioni:  
 **[antoniodicoratoinfodev@gmail.com](mailto:antoniodicoratoinfodev@gmail.com)**
 
 ### Disclaimer
 
-Questo software è fornito *“così com’è”*, senza alcuna garanzia.  
-L’autore non è responsabile per eventuali danni derivanti dal suo utilizzo.
+Questo software è fornito *"così com'è"*, senza alcuna garanzia.  
+L'autore non è responsabile per eventuali danni derivanti dal suo utilizzo.
 
 ---
 
-## 📦 Disponibilità dell’app
+## 📦 Disponibilità dell'app
 
-L’applicazione completa sarà disponibile per l’acquisto sul Google Play Store.
+L'applicazione completa sarà disponibile per l'acquisto sul Google Play Store.
