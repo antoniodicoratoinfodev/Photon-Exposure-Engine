@@ -1,5 +1,7 @@
 package com.photography.luxexposimeter;
 
+import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerShutter;
     private Button btnCalcFromFStop;
     private Button btnCalcFromShutter;
+    private Button btnFormulas;
 
     private TextView tvEV100;
     private TextView tvEVISO;
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerShutter = findViewById(R.id.spinnerShutter);
         btnCalcFromFStop = findViewById(R.id.btnCalcFromFStop);
         btnCalcFromShutter = findViewById(R.id.btnCalcFromShutter);
+        btnFormulas = findViewById(R.id.btnFormulas);
         tvEV100 = findViewById(R.id.tvEV100);
         tvEVISO = findViewById(R.id.tvEVISO);
         tvFNumber = findViewById(R.id.tvFNumber);
@@ -130,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
     private void setupListeners() {
         btnCalcFromFStop.setOnClickListener(v -> calculateFromFStop());
         btnCalcFromShutter.setOnClickListener(v -> calculateFromShutter());
+        btnFormulas.setOnClickListener(v ->
+                startActivity(new Intent(this, FormulasActivity.class)));
     }
 
     private ArrayAdapter<String> createWhiteTextAdapter(String[] items) {
@@ -246,27 +252,28 @@ public class MainActivity extends AppCompatActivity {
 
         // Intestazione tabella
         LinearLayout header = makeRow(
-                "Aperture", "Shutter speed", "EV validation", true);
+                "Aperture", "Shutter speed", "EV validation", true, false);
         layoutEquivalents.addView(header);
 
-        for (double[] combo : combos) {
-            double fNum = combo[0];
-            double t = combo[1];
+        for (int i = 0; i < combos.size(); i++) {
+            double fNum = combos.get(i)[0];
+            double t = combos.get(i)[1];
             double evCheck = ExposureCalculator.fNumberAndShutterSpeedToEV(fNum, t);
 
             LinearLayout row = makeRow(
                     ExposureCalculator.formatFNumber(fNum),
                     ExposureCalculator.formatShutterSpeed(t),
                     String.format(Locale.getDefault(), "%.2f", evCheck),
-                    false);
+                    false, i % 2 == 1);
             layoutEquivalents.addView(row);
         }
     }
 
-    private LinearLayout makeRow(String col1, String col2, String col3, boolean isHeader) {
+    private LinearLayout makeRow(String col1, String col2, String col3,
+                                 boolean isHeader, boolean altRow) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setPadding(0, 4, 0, 4);
+        row.setPadding(dp(10), dp(6), dp(10), dp(6));
 
         int weight1 = 3, weight2 = 3, weight3 = 2;
 
@@ -279,9 +286,12 @@ public class MainActivity extends AppCompatActivity {
         row.addView(tv3);
 
         if (isHeader) {
-            row.setBackgroundColor(0xFF1565C0); // blu scuro
-        } else {
-            row.setBackgroundColor(0xFF1E1E2E); // sfondo scuro
+            GradientDrawable headerBg = new GradientDrawable();
+            headerBg.setColor(getResources().getColor(R.color.header_row_bg));
+            headerBg.setCornerRadius(dp(8));
+            row.setBackground(headerBg);
+        } else if (altRow) {
+            row.setBackgroundColor(getResources().getColor(R.color.row_alt));
         }
 
         return row;
@@ -291,13 +301,22 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = new TextView(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, weight);
-        params.setMargins(4, 2, 4, 2);
         tv.setLayoutParams(params);
         tv.setText(text);
-        tv.setTextSize(13f);
-        tv.setTextColor(isHeader ? 0xFFFFFFFF : 0xFFE0E0E0);
-        if (isHeader) tv.setTypeface(null, android.graphics.Typeface.BOLD);
+        if (isHeader) {
+            tv.setTextSize(12f);
+            tv.setTextColor(getResources().getColor(R.color.accent_blue_light));
+            tv.setTypeface(null, android.graphics.Typeface.BOLD);
+        } else {
+            tv.setTextSize(13f);
+            tv.setTextColor(getResources().getColor(R.color.text_primary));
+            tv.setTypeface(android.graphics.Typeface.MONOSPACE);
+        }
         return tv;
+    }
+
+    private int dp(int dps) {
+        return Math.round(getResources().getDisplayMetrics().density * dps);
     }
 
     // ─── ENUM per la descrizione della scena (sostituisce il vecchio metodo if/else) ───
