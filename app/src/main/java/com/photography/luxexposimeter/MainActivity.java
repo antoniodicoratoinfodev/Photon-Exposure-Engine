@@ -321,18 +321,18 @@ public class MainActivity extends AppCompatActivity {
 
     // ─── ENUM per la descrizione della scena (sostituisce il vecchio metodo if/else) ───
     private enum SceneEV {
-        EXTREME_DARK(-1.0, "Total darkness, candlelight only"),
-        CANDLELIGHT(1.0, "Candlelight, flame, very low light"),
-        DIM_INTERIOR(3.0, "Dim interior lighting, low light"),
-        HOME_INTERIOR(5.0, "Indoor lighting, typical home illumination"),
-        BRIGHT_INTERIOR(7.0, "Well-lit interiors, offices, retail spaces"),
-        NIGHT_STREET(9.0, "Night street lighting, neon signs, urban night scene"),
-        OVERCAST_SHADE(11.0, "Heavy overcast, deep open shade"),
-        CLOUDY(12.0, "Overcast sky, soft diffused daylight"),
-        LIGHT_CLOUD(13.0, "Thin cloud cover, soft daylight, veiled sun"),
-        DIRECT_SUN(14.0, "Direct sunlight, slight shadows"),
-        FULL_SUN(15.0, "Full sunlight, clear day"),
-        BRIGHT_SUN_REFLECTED(16.0, "Very bright sunlight, sand/snow reflections"),
+        EXTREME_DARK(0.0, "Total darkness, candlelight only"),
+        CANDLELIGHT(2.0, "Candlelight, flame, very low light"),
+        DIM_INTERIOR(4.0, "Dim interior lighting, low light"),
+        HOME_INTERIOR(6.0, "Indoor lighting, typical home illumination"),
+        BRIGHT_INTERIOR(8.0, "Well-lit interiors, offices, retail spaces"),
+        NIGHT_STREET(10.0, "Night street lighting, neon signs, urban night scene"),
+        OVERCAST_SHADE(12.0, "Heavy overcast, deep open shade"),
+        CLOUDY(13.0, "Overcast sky, soft diffused daylight"),
+        LIGHT_CLOUD(14.0, "Thin cloud cover, soft daylight, veiled sun"),
+        DIRECT_SUN(15.0, "Direct sunlight, slight shadows"),
+        FULL_SUN(16.0, "Full sunlight, clear day"),
+        BRIGHT_SUN_REFLECTED(17.0, "Very bright sunlight, sand/snow reflections"),
         EXTREME_LIGHT(Double.MAX_VALUE, "Extreme brightness, strong reflections (snow, desert, arc lamps)");
 
         private final double upperBound; // limite superiore (escluso per l'ultimo)
@@ -345,7 +345,9 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Restituisce la descrizione della scena in base all'EV a ISO 100.
-         * I range sono identici a quelli del vecchio metodo describeScene().
+         * Ogni fascia copre [bound precedente, upperBound): l'EV canonico della
+         * tabella Wikipedia/ANSI PH2.7 (es. EV 15 = pieno sole, EV 16 = sabbia/neve)
+         * cade all'inizio della propria fascia.
          *
          * @param ev100 Valore EV (riferito a ISO 100)
          * @return descrizione testuale

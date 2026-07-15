@@ -216,7 +216,7 @@ java ExposureCalculatorTest
 
 * `C = 250` is valid for **flat (cosine) sensors**
 * Hemispherical sensors use:
-  * `C = 320` (Minolta)
+  * `C = 330` (Minolta)
   * `C = 340` (Sekonic)
 * Standard f-numbers follow ISO photographic scale (including 1/3 and 1/2 stops)
 * Shutter speeds range from **30s to 1/8000s**
@@ -474,7 +474,7 @@ java ExposureCalculatorTest
 
 * `C = 250` è valido per **sensori flat (cosine)**
 * Sensori emisferici utilizzano:
-  * `C = 320` (Minolta)
+  * `C = 330` (Minolta)
   * `C = 340` (Sekonic)
 * I f-number standard seguono la scala fotografica ISO (inclusi 1/3 e 1/2 stop)
 * I tempi di esposizione vanno da **30s a 1/8000s**

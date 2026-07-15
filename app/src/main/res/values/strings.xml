@@ -62,7 +62,7 @@
     <string name="formula_s5_desc">All combinations (N, t) satisfying the same EV produce the same exposure. The equivalent combinations table demonstrates this principle.</string>
 
     <string name="formula_notes_title">Calibration notes</string>
-    <string name="formula_notes_desc">C = 250 applies to flat (cosine) sensors. Hemispherical sensors use C = 320 (Minolta) or C = 340 (Sekonic). Standard f-numbers follow the ISO photographic scale (including 1/3 and 1/2 stops); shutter speeds range from 30s to 1/8000s. Comparisons are logarithmic to match exposure stops.</string>
+    <string name="formula_notes_desc">C = 250 applies to flat (cosine) sensors. Hemispherical sensors use C = 330 (Minolta) or C = 340 (Sekonic). Standard f-numbers follow the ISO photographic scale (including 1/3 and 1/2 stops); shutter speeds range from 30s to 1/8000s. Comparisons are logarithmic to match exposure stops.</string>
 
     <string name="formula_sources_title">Sources</string>
     <string name="formula_sources_desc">• Wikipedia — \"Exposure value\": formal EV definition and lux/EV reference table\n\n• ANSI PH3.49-1971 — calibration constant C = 250\n\n• ISO 2720:1974 — international light meter standard\n\n• ANSI PH2.7-1986 — EV reference table for real-world scenes</string>

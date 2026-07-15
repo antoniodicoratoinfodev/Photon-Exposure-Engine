@@ -21,6 +21,7 @@ public class ExposureCalculatorTest {
         testRoundTrip();
         testEquivalentCombinations();
         testFormatShutterSpeed();
+        testNearestStandardFStop();
         testFormatFNumber();
         testTableValues();
 
@@ -171,6 +172,42 @@ public class ExposureCalculatorTest {
         assertEqual("1/125", ExposureCalculator.formatShutterSpeed(1.0 / 125.0), "1/125");
         assertEqual("1/60", ExposureCalculator.formatShutterSpeed(1.0 / 60.0), "1/60");
         assertEqual("1/1000", ExposureCalculator.formatShutterSpeed(1.0 / 1000.0), "1/1000");
+
+        // Denominatori frazionari della serie standard: niente arrotondamento fuorviante
+        assertEqual("1/1.3", ExposureCalculator.formatShutterSpeed(1.0 / 1.3), "1/1.3");
+        assertEqual("1/1.6", ExposureCalculator.formatShutterSpeed(1.0 / 1.6), "1/1.6");
+        assertEqual("1/2.5", ExposureCalculator.formatShutterSpeed(1.0 / 2.5), "1/2.5");
+        assertEqual("1/2", ExposureCalculator.formatShutterSpeed(0.5), "1/2");
+        assertEqual("1/3", ExposureCalculator.formatShutterSpeed(1.0 / 3.0), "1/3");
+        assertEqual("2.5 secondi", ExposureCalculator.formatShutterSpeed(2.5), "2.5\"");
+
+        // Ogni tempo della serie standard deve avere un'etichetta univoca
+        java.util.Set<String> labels = new java.util.HashSet<>();
+        boolean unique = true;
+        for (double t : ExposureCalculator.STANDARD_SHUTTER_SPEEDS) {
+            if (!labels.add(ExposureCalculator.formatShutterSpeed(t))) {
+                fail("Etichetta duplicata nella serie standard: "
+                        + ExposureCalculator.formatShutterSpeed(t));
+                unique = false;
+            }
+        }
+        if (unique) pass("Etichette dei tempi standard tutte univoche");
+    }
+
+    // ─── Test 7b: Snapping f-stop in scala logaritmica ────────────────────────
+    static void testNearestStandardFStop() {
+        System.out.println("\n--- Test 7b: nearestStandardFStop (scala logaritmica) ---");
+
+        // Valori esattamente sulla serie: restano invariati
+        assertApprox("f/5.6 → f/5.6", ExposureCalculator.nearestStandardFStop(5.6), 5.6, 0.0001);
+        assertApprox("f/1.4 → f/1.4", ExposureCalculator.nearestStandardFStop(1.4), 1.4, 0.0001);
+
+        // Il più vicino va scelto in stop (log), non in differenza lineare:
+        // N=3.14: log-dist da 2.8 = 0.115, da 3.5 = 0.109 → f/3.5
+        assertApprox("f/3.14 → f/3.5 (log)", ExposureCalculator.nearestStandardFStop(3.14), 3.5, 0.0001);
+
+        // N=26.8 tra 22 e 32: log-dist da 22 = 0.197, da 32 = 0.177 → f/32
+        assertApprox("f/26.8 → f/32 (log)", ExposureCalculator.nearestStandardFStop(26.8), 32.0, 0.0001);
     }
 
     // ─── Test 8: Formattazione f-number ───────────────────────────────────────

@@ -2,6 +2,7 @@ package com.photography.luxexposimeter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * ExposureCalculator
@@ -38,8 +39,8 @@ public class ExposureCalculator {
     public static final double C_FLAT = 250.0;
 
     // Costante di calibrazione per sensore emisferico (hemispherical/cardioid)
-    // Minolta usa 320, Sekonic usa 340; usiamo 320 come default
-    public static final double C_HEMI = 320.0;
+    // Minolta usa 330, Sekonic usa 340; usiamo 330 come default
+    public static final double C_HEMI = 330.0;
 
     // Serie standard di f-number (diaframmi) in scala fotografica
     public static final double[] STANDARD_F_STOPS = {
@@ -150,9 +151,10 @@ public class ExposureCalculator {
      */
     public static double nearestStandardFStop(double fNumber) {
         double nearest = STANDARD_F_STOPS[0];
-        double minDiff = Math.abs(fNumber - nearest);
+        // Confronto in scala logaritmica per coerenza con la scala fotografica
+        double minDiff = Math.abs(Math.log(fNumber) - Math.log(nearest));
         for (double f : STANDARD_F_STOPS) {
-            double diff = Math.abs(fNumber - f);
+            double diff = Math.abs(Math.log(fNumber) - Math.log(f));
             if (diff < minDiff) {
                 minDiff = diff;
                 nearest = f;
@@ -183,7 +185,7 @@ public class ExposureCalculator {
 
     /**
      * Formatta un tempo di esposizione in secondi come stringa leggibile.
-     * Esempi: 1/125, 1/60, 2", 1/2, 30"
+     * Esempi: 1/125, 1/60, 2", 1/2, 1/1.3, 30"
      *
      * @param shutterSpeed  Tempo in secondi
      * @return              Stringa formattata
@@ -194,12 +196,19 @@ public class ExposureCalculator {
             if (shutterSpeed == Math.floor(shutterSpeed)) {
                 return (int) shutterSpeed + "\"";
             } else {
-                return String.format("%.1f\"", shutterSpeed);
+                return String.format(Locale.US, "%.1f\"", shutterSpeed);
             }
         } else {
             // Tempi < 1 secondo: mostra come frazione 1/N
-            int denominator = (int) Math.round(1.0 / shutterSpeed);
-            return "1/" + denominator;
+            double denominator = 1.0 / shutterSpeed;
+            long rounded = Math.round(denominator);
+            // Se arrotondare a intero altera il denominatore di oltre il 3%
+            // (es. 1/1.3, 1/1.6, 1/2.5 della serie standard), mantieni un decimale
+            // per non falsare il tempo mostrato né duplicare le etichette
+            if (Math.abs(denominator - rounded) / denominator > 0.03) {
+                return String.format(Locale.US, "1/%.1f", denominator);
+            }
+            return "1/" + rounded;
         }
     }
 
@@ -214,7 +223,7 @@ public class ExposureCalculator {
         if (fNumber == Math.floor(fNumber)) {
             return "f/" + (int) fNumber;
         } else {
-            return String.format("f/%.1f", fNumber);
+            return String.format(Locale.US, "f/%.1f", fNumber);
         }
     }
 
