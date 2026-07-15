@@ -12,6 +12,14 @@
     <!-- ISO -->
     <string name="label_iso">ISO sensitivity</string>
 
+    <!-- Tab Digital / Analog -->
+    <string name="tab_digital">Digital</string>
+    <string name="tab_analog">Analog</string>
+
+    <!-- Card pellicola (solo tab Analog) -->
+    <string name="label_film">Film stock (reciprocity data)</string>
+    <string name="placeholder_film_info">Select the film to apply its reciprocity failure correction.</string>
+
     <!-- Modalità A -->
     <string name="mode_a_title">A mode – Aperture priority</string>
     <string name="mode_a_desc">Choose the aperture: the app calculates the exposure time</string>
@@ -30,6 +38,7 @@
     <string name="placeholder_ev_iso">EV (ISO) = —</string>
     <string name="placeholder_fnumber">Aperture: —</string>
     <string name="placeholder_shutter">Shutter speed: —</string>
+    <string name="placeholder_shutter_corrected">Film time: —</string>
     <string name="placeholder_scene">Scene description: —</string>
 
     <!-- Combinazioni equivalenti -->
@@ -61,9 +70,13 @@
     <string name="formula_s5_code">EV = log₂(N² / t) = constant</string>
     <string name="formula_s5_desc">All combinations (N, t) satisfying the same EV produce the same exposure. The equivalent combinations table demonstrates this principle.</string>
 
+    <string name="formula_s6_title">6 — Reciprocity failure (Analog tab)</string>
+    <string name="formula_s6_code">Reciprocity law: H = E × t (valid ~1/1000 s – 1 s on film)\n\nSchwarzschild effect: response ∝ E × t^p, p &lt; 1\n\nIlford/HARMAN model:\nTc = Tm^P   (no correction for Tm ≤ 1 s)\n\nDatasheet tables (Kodak, Foma):\nlog-log linear interpolation of (Tm → Tc) points\n\nStop-based data (Fuji, E100):\nTc = Tm × 2^s(Tc)   (fixed point)\n\nShutter-priority (fixed actual time t):\nTm_eq = t / 2^s(t)  or  t^(1/P) → N = √(Tm_eq × 2^EV)</string>
+    <string name="formula_s6_desc">On film, effective sensitivity drops during long exposures (low-intensity reciprocity failure): the metered time Tm must be extended to the corrected time Tc. The Analog tab applies the official manufacturer data per film stock; beyond the published data the value is extrapolated and flagged. High-intensity failure (&lt; 1/10,000 s) is outside the app range. Digital sensors are linear: no correction.</string>
+
     <string name="formula_notes_title">Calibration notes</string>
     <string name="formula_notes_desc">C = 250 applies to flat (cosine) sensors. Hemispherical sensors use C = 330 (Minolta) or C = 340 (Sekonic). Standard f-numbers follow the ISO photographic scale (including 1/3 and 1/2 stops); shutter speeds range from 30s to 1/8000s. Comparisons are logarithmic to match exposure stops.</string>
 
     <string name="formula_sources_title">Sources</string>
-    <string name="formula_sources_desc">• Wikipedia — \"Exposure value\": formal EV definition and lux/EV reference table\n\n• ANSI PH3.49-1971 — calibration constant C = 250\n\n• ISO 2720:1974 — international light meter standard\n\n• ANSI PH2.7-1986 — EV reference table for real-world scenes</string>
+    <string name="formula_sources_desc">• Wikipedia — \"Exposure value\": formal EV definition and lux/EV reference table\n\n• ANSI PH3.49-1971 — calibration constant C = 250\n\n• ISO 2720:1974 — international light meter standard\n\n• ANSI PH2.7-1986 — EV reference table for real-world scenes\n\n• HARMAN Technology — \"Film Reciprocity Failure Compensation\" (Dec 2023): Tc = Tm^P factors for Ilford/Kentmere films\n\n• Kodak F-4016 (T-Max 100), F-4017 (Tri-X), F-4043 (T-Max 400) — long exposure adjustment tables\n\n• Fujifilm AF3-0258E (Acros II), RVP50 Data Guide (Velvia 50), Provia 100F datasheet\n\n• Foma — Fomapan 100/400 datasheets (Schwarzschild effect tables)</string>
 </resources>

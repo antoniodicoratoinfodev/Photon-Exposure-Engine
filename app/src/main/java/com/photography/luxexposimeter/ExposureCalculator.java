@@ -185,12 +185,24 @@ public class ExposureCalculator {
 
     /**
      * Formatta un tempo di esposizione in secondi come stringa leggibile.
-     * Esempi: 1/125, 1/60, 2", 1/2, 1/1.3, 30"
+     * Esempi: 1/125, 1/60, 2", 1/2, 1/1.3, 30", 20' 0", 1h 31' 0"
+     * I tempi ≥ 60 s (tipici delle lunghe esposizioni corrette per
+     * reciprocità) sono mostrati in minuti/ore con i secondi arrotondati.
      *
      * @param shutterSpeed  Tempo in secondi
      * @return              Stringa formattata
      */
     public static String formatShutterSpeed(double shutterSpeed) {
+        if (shutterSpeed >= 60.0) {
+            long total = Math.round(shutterSpeed);
+            long hours = total / 3600;
+            long minutes = (total % 3600) / 60;
+            long seconds = total % 60;
+            if (hours > 0) {
+                return hours + "h " + minutes + "' " + seconds + "\"";
+            }
+            return minutes + "' " + seconds + "\"";
+        }
         if (shutterSpeed >= 1.0) {
             // Tempi >= 1 secondo: mostra come intero o decimale con apice
             if (shutterSpeed == Math.floor(shutterSpeed)) {

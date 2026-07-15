@@ -15,6 +15,36 @@
         android:padding="20dp">
 
         <!-- ══════════════════════════════════════════════════════════════
+             TAB: DIGITAL / ANALOG
+        ═══════════════════════════════════════════════════════════════ -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@color/card_bg"
+            app:tabIndicatorColor="@color/accent_gold"
+            app:tabIconTint="@color/tab_icon_tint"
+            app:tabTextColor="@color/text_secondary"
+            app:tabSelectedTextColor="@color/accent_gold"
+            app:tabRippleColor="@color/result_stroke"
+            app:tabInlineLabel="true">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_camera_digital"
+                android:text="@string/tab_digital" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_camera_film"
+                android:text="@string/tab_analog" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <!-- ══════════════════════════════════════════════════════════════
              INTESTAZIONE
         ═══════════════════════════════════════════════════════════════ -->
         <TextView
@@ -161,6 +191,67 @@
                         android:popupBackground="@color/card_bg" />
 
                 </FrameLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ══════════════════════════════════════════════════════════════
+             CARD: PELLICOLA (solo tab Analog)
+        ═══════════════════════════════════════════════════════════════ -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardFilm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/result_stroke"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:text="@string/label_film"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.03" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_field"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="4dp">
+
+                    <Spinner
+                        android:id="@+id/spinnerFilm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/accent_gold"
+                        android:popupBackground="@color/card_bg" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvFilmInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="@string/placeholder_film_info"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -407,6 +498,28 @@
                     android:textStyle="bold"
                     android:paddingBottom="4dp"
                     android:fontFamily="monospace" />
+
+                <TextView
+                    android:id="@+id/tvShutterCorrected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/placeholder_shutter_corrected"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp"
+                    android:fontFamily="monospace"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvReciprocityNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="italic"
+                    android:visibility="gone" />
 
                 <View
                     android:layout_width="match_parent"

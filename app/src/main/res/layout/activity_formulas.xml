@@ -176,6 +176,29 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- 6 — Reciprocity failure (tab Analog) -->
+        <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Widget.App.FormulaSectionTitle"
+                    android:text="@string/formula_s6_title" />
+
+                <TextView
+                    style="@style/Widget.App.FormulaCode"
+                    android:text="@string/formula_s6_code" />
+
+                <TextView
+                    style="@style/Widget.App.FormulaBody"
+                    android:text="@string/formula_s6_desc" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Note di calibrazione -->
         <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
             <LinearLayout

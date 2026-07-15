@@ -107,6 +107,59 @@ The app includes a table of equivalent combinations to demonstrate this principl
 
 ---
 
+### 6. Reciprocity failure — Analog tab
+
+The reciprocity law `H = E × t` holds on film only in the mid range (~1/1000 s – 1 s).
+For long exposures the effective sensitivity of the emulsion drops
+(**low-intensity reciprocity failure**, Schwarzschild effect: response ∝ `E × t^p`, `p < 1`),
+so the metered time `Tm` must be extended to a corrected time `Tc`.
+The **Analog** tab applies the official manufacturer data of the selected film stock;
+the **Digital** tab applies no correction (digital sensors are linear).
+
+**Ilford / HARMAN model** (official, "Film Reciprocity Failure Compensation", Dec 2023 — no correction for `Tm ≤ 1 s`):
+
+```
+Tc = Tm^P
+```
+
+| Film | P | Film | P |
+|---|---|---|---|
+| Pan F+ | 1.33 | SFX 200 | 1.43 |
+| FP4+ | 1.26 | XP2 Super | 1.31 |
+| HP5+ | 1.31 | Ortho+ | 1.25 |
+| Delta 100 | 1.26 | Kentmere 100 | 1.26 |
+| Delta 400 | 1.41 | Kentmere 400 | 1.30 |
+| Delta 3200 | 1.33 | Generic B&W | 1.30 |
+
+**Datasheet tables** (log-log linear interpolation between published points):
+
+| Film | Published points (metered → corrected) |
+|---|---|
+| Kodak Tri-X 320/400 (F-4017) | 1 s→2 s, 10 s→50 s, 100 s→1200 s (dev −10/−20/−30%) |
+| Kodak T-Max 100 (F-4016) | 1 s→+1/3 stop, 10 s→15 s, 100 s→200 s |
+| Kodak T-Max 400 (F-4043) | ≤1 s none, 10 s→+1/3 stop, 100 s→300 s |
+| Fomapan 100 | 1 s→×2, 10 s→×8, 100 s→×16 |
+| Fomapan 400 | 1 s→×1.5, 10 s→×6, 100 s→×8 |
+
+**Stop-based data** (the correction `s(t)` refers to the *actual* exposure time,
+so the corrected time solves the fixed point `Tc = Tm × 2^s(Tc)`):
+
+| Film | Data |
+|---|---|
+| Fuji Acros II (AF3-0258E) | none <120 s; +1/2 stop for 120–1000 s |
+| Fuji Provia 100F | none up to 128 s; beyond: test |
+| Fuji Velvia 50 (RVP50) | 4 s→+1/3 (CC 5M), 8 s→+1/2, 16 s→+2/3, 32 s→+1 stop; ≥64 s not recommended |
+| Kodak Ektachrome E100 | ~+1/2 stop for 20–40 s (approximate) |
+
+**Shutter-priority mode (B)** — with a fixed *actual* time `t`, the equivalent
+metered time is `Tm_eq = t / 2^s(t)` (or `t^(1/P)`), and the aperture becomes
+`N = √(Tm_eq × 2^EV)` (i.e. the aperture opens by `log2(t / Tm_eq)` stops).
+
+Beyond the published manufacturer data the value is extrapolated and flagged in the UI.
+High-intensity failure (exposures < 1/10,000 s) is outside the app range.
+
+---
+
 ## 📚 Sources
 
 | Source                       | Description                                     |
@@ -115,6 +168,10 @@ The app includes a table of equivalent combinations to demonstrate this principl
 | ANSI PH3.49-1971             | Calibration constant C = 250                    |
 | ISO 2720:1974                | International light meter standard              |
 | ANSI PH2.7-1986              | EV reference table for real-world scenes        |
+| HARMAN Technology (Dec 2023) | "Film Reciprocity Failure Compensation" — Tc = Tm^P factors |
+| Kodak F-4016 / F-4017 / F-4043 | T-Max 100, Tri-X, T-Max 400 long-exposure tables |
+| Fujifilm AF3-0258E, RVP50 Data Guide | Acros II, Velvia 50, Provia 100F reciprocity data |
+| Foma datasheets              | Fomapan 100/400 "Schwarzschild effect" tables   |
 
 ---
 
@@ -127,8 +184,11 @@ Photon-Exposure-Engine/
 │       ├── AndroidManifest.xml
 │       ├── java/com/photography/luxexposimeter/
 │       │   ├── ExposureCalculator.java
+│       │   ├── FilmStock.java
+│       │   ├── ReciprocityCalculator.java
 │       │   ├── MainActivity.java
-│       │   └── ExposureCalculatorTest.java
+│       │   ├── ExposureCalculatorTest.java
+│       │   └── ReciprocityCalculatorTest.java
 │       └── res/
 │           ├── layout/activity_main.xml
 │           ├── values/strings.xml
@@ -200,14 +260,22 @@ Photon-Exposure-Engine/
 * Equivalent exposure combinations
 * Formatting of shutter speeds and apertures
 
-**Result:** 67 tests — 0 failures ✅
+`ReciprocityCalculatorTest.java` verifies the Analog-tab math:
+
+* Ilford power model (official HP5+ example: 10 s → 20.4 s)
+* Exact datasheet points for Kodak, Foma, Fuji tables
+* Fixed-point solution for stop-based data (Velvia 50, Acros II, E100)
+* Inverse (shutter-priority) round-trips
+* Monotonicity, `Tc ≥ Tm`, beyond-data flags, long-time formatting
 
 Run tests:
 
 ```bash
 cd app/src/main/java/com/photography/luxexposimeter
-javac ExposureCalculator.java ExposureCalculatorTest.java
+javac ExposureCalculator.java ExposureCalculatorTest.java \
+      FilmStock.java ReciprocityCalculator.java ReciprocityCalculatorTest.java
 java ExposureCalculatorTest
+java ReciprocityCalculatorTest
 ```
 
 ---
@@ -365,6 +433,33 @@ L'app include una tabella di combinazioni equivalenti per dimostrare questo prin
 
 ---
 
+### 6. Difetto di reciprocità — tab Analog
+
+La legge di reciprocità `H = E × t` vale sulla pellicola solo nel range medio
+(~1/1000 s – 1 s). Alle lunghe esposizioni la sensibilità effettiva
+dell'emulsione cala (**difetto di reciprocità a bassa intensità**, effetto
+Schwarzschild: risposta ∝ `E × t^p`, `p < 1`): il tempo misurato `Tm` va
+allungato al tempo corretto `Tc`. Il tab **Analog** applica i dati ufficiali
+del produttore per la pellicola selezionata; il tab **Digital** non applica
+alcuna correzione (i sensori digitali sono lineari).
+
+**Modello Ilford / HARMAN** (ufficiale, "Film Reciprocity Failure Compensation",
+dic 2023 — nessuna correzione per `Tm ≤ 1 s`):
+
+```
+Tc = Tm^P
+```
+
+I fattori P per pellicola, le tabelle Kodak/Foma (interpolate in scala log-log)
+e i dati in stop Fuji/E100 (punto fisso `Tc = Tm × 2^s(Tc)`) sono elencati
+nella sezione inglese qui sopra. In **modalità B** (tempo reale fisso `t`) il
+tempo equivalente misurato è `Tm_eq = t / 2^s(t)` (oppure `t^(1/P)`) e il
+diaframma si apre di `log2(t / Tm_eq)` stop: `N = √(Tm_eq × 2^EV)`.
+Oltre i dati pubblicati dal produttore il valore è estrapolato e segnalato
+nella UI; il failure ad alta intensità (< 1/10.000 s) è fuori dal range dell'app.
+
+---
+
 ## 📚 Fonti
 
 | Fonte                        | Descrizione                                               |
@@ -373,6 +468,10 @@ L'app include una tabella di combinazioni equivalenti per dimostrare questo prin
 | ANSI PH3.49-1971             | Costante di calibrazione C = 250                          |
 | ISO 2720:1974                | Standard internazionale per luxmetri                      |
 | ANSI PH2.7-1986              | Tabella di riferimento EV per scene reali                 |
+| HARMAN Technology (dic 2023) | "Film Reciprocity Failure Compensation" — fattori Tc = Tm^P |
+| Kodak F-4016 / F-4017 / F-4043 | Tabelle lunghe esposizioni T-Max 100, Tri-X, T-Max 400  |
+| Fujifilm AF3-0258E, RVP50 Data Guide | Dati reciprocità Acros II, Velvia 50, Provia 100F |
+| Datasheet Foma               | Tabelle "Schwarzschild effect" Fomapan 100/400            |
 
 ---
 
@@ -385,8 +484,11 @@ Photon-Exposure-Engine/
 │       ├── AndroidManifest.xml
 │       ├── java/com/photography/luxexposimeter/
 │       │   ├── ExposureCalculator.java
+│       │   ├── FilmStock.java
+│       │   ├── ReciprocityCalculator.java
 │       │   ├── MainActivity.java
-│       │   └── ExposureCalculatorTest.java
+│       │   ├── ExposureCalculatorTest.java
+│       │   └── ReciprocityCalculatorTest.java
 │       └── res/
 │           ├── layout/activity_main.xml
 │           ├── values/strings.xml
@@ -458,14 +560,22 @@ Photon-Exposure-Engine/
 * Combinazioni di esposizione equivalenti
 * Formattazione di tempi di esposizione e aperture
 
-**Risultato:** 67 test — 0 fallimenti ✅
+`ReciprocityCalculatorTest.java` verifica la matematica del tab Analog:
+
+* Modello Ilford Tc = Tm^P (esempio ufficiale HP5+: 10 s → 20.4 s)
+* Punti esatti delle tabelle Kodak, Foma e Fuji
+* Punto fisso per i dati in stop (Velvia 50, Acros II, E100)
+* Round-trip dell'inversa (priorità di tempi)
+* Monotonia, `Tc ≥ Tm`, flag oltre-dati, formattazione tempi lunghi
 
 Esecuzione test:
 
 ```bash
 cd app/src/main/java/com/photography/luxexposimeter
-javac ExposureCalculator.java ExposureCalculatorTest.java
+javac ExposureCalculator.java ExposureCalculatorTest.java \
+      FilmStock.java ReciprocityCalculator.java ReciprocityCalculatorTest.java
 java ExposureCalculatorTest
+java ReciprocityCalculatorTest
 ```
 
 ---

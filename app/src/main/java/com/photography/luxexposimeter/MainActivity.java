@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -34,21 +36,31 @@ import java.util.Locale;
  *       A) Fisso il diaframma → calcola il tempo
  *       B) Fisso il tempo    → calcola il diaframma
  *
+ * Due tab in testa alla pagina:
+ *   - Digital: matematica esposimetrica pura (legge di reciprocità valida)
+ *   - Analog:  stessa app, ma il tempo viene corretto per il difetto di
+ *              reciprocità (reciprocity failure) della pellicola selezionata;
+ *              in modalità B è il diaframma a essere compensato.
+ *
  * L'app mostra:
  *   - EV a ISO 100
  *   - EV corretto per l'ISO scelto
  *   - Diaframma (f-number)
- *   - Tempo di esposizione
+ *   - Tempo di esposizione (e tempo corretto per la pellicola nel tab Analog)
  *   - Tabella delle combinazioni equivalenti
  *   - Descrizione della scena in base all'EV
  */
 public class MainActivity extends AppCompatActivity {
 
     // ─── Widget ───────────────────────────────────────────────────────────────
+    private TabLayout tabMode;
     private EditText etLux;
     private Spinner spinnerISO;
     private Spinner spinnerFStop;
     private Spinner spinnerShutter;
+    private Spinner spinnerFilm;
+    private View cardFilm;
+    private TextView tvFilmInfo;
     private Button btnCalcFromFStop;
     private Button btnCalcFromShutter;
     private Button btnFormulas;
@@ -57,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvEVISO;
     private TextView tvFNumber;
     private TextView tvShutterSpeed;
+    private TextView tvShutterCorrected;
+    private TextView tvReciprocityNote;
     private TextView tvSceneDescription;
     private LinearLayout layoutEquivalents;
     private TextView tvEquivalentsHeader;
@@ -65,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
     private String[] isoLabels;
     private String[] fStopLabels;
     private String[] shutterLabels;
+    private FilmStock[] filmStocks;
+
+    // Stato del tab (false = Digital, true = Analog) e ultima modalità
+    // calcolata (0 = nessuna, 1 = diaframma fisso, 2 = tempo fisso) per
+    // ricalcolare automaticamente al cambio di tab o pellicola.
+    private boolean analogMode = false;
+    private int lastCalcMode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +99,14 @@ public class MainActivity extends AppCompatActivity {
 
     // ─── Binding ──────────────────────────────────────────────────────────────
     private void bindViews() {
+        tabMode = findViewById(R.id.tabMode);
         etLux = findViewById(R.id.etLux);
         spinnerISO = findViewById(R.id.spinnerISO);
         spinnerFStop = findViewById(R.id.spinnerFStop);
         spinnerShutter = findViewById(R.id.spinnerShutter);
+        spinnerFilm = findViewById(R.id.spinnerFilm);
+        cardFilm = findViewById(R.id.cardFilm);
+        tvFilmInfo = findViewById(R.id.tvFilmInfo);
         btnCalcFromFStop = findViewById(R.id.btnCalcFromFStop);
         btnCalcFromShutter = findViewById(R.id.btnCalcFromShutter);
         btnFormulas = findViewById(R.id.btnFormulas);
@@ -89,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
         tvEVISO = findViewById(R.id.tvEVISO);
         tvFNumber = findViewById(R.id.tvFNumber);
         tvShutterSpeed = findViewById(R.id.tvShutterSpeed);
+        tvShutterCorrected = findViewById(R.id.tvShutterCorrected);
+        tvReciprocityNote = findViewById(R.id.tvReciprocityNote);
         tvSceneDescription = findViewById(R.id.tvSceneDescription);
         layoutEquivalents = findViewById(R.id.layoutEquivalents);
         tvEquivalentsHeader = findViewById(R.id.tvEquivalentsHeader);
@@ -128,6 +155,19 @@ public class MainActivity extends AppCompatActivity {
         shutterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerShutter.setAdapter(shutterAdapter);
         spinnerShutter.setSelection(36); // 1/125
+
+        // Pellicole per il tab Analog
+        filmStocks = FilmStock.analogValues();
+        String[] filmLabels = new String[filmStocks.length];
+        int hp5Index = 0;
+        for (int i = 0; i < filmStocks.length; i++) {
+            filmLabels[i] = filmStocks[i].displayName;
+            if (filmStocks[i] == FilmStock.ILFORD_HP5_PLUS) hp5Index = i;
+        }
+        ArrayAdapter<String> filmAdapter = createWhiteTextAdapter(filmLabels);
+        filmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFilm.setAdapter(filmAdapter);
+        spinnerFilm.setSelection(hp5Index); // Ilford HP5+ come default
     }
 
     // ─── Listener ─────────────────────────────────────────────────────────────
@@ -136,6 +176,63 @@ public class MainActivity extends AppCompatActivity {
         btnCalcFromShutter.setOnClickListener(v -> calculateFromShutter());
         btnFormulas.setOnClickListener(v ->
                 startActivity(new Intent(this, FormulasActivity.class)));
+
+        tabMode.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                setAnalogMode(tab.getPosition() == 1);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        spinnerFilm.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateFilmInfo();
+                recalculateIfPossible();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    // ─── Cambio tab Digital / Analog ──────────────────────────────────────────
+    private void setAnalogMode(boolean analog) {
+        analogMode = analog;
+        cardFilm.setVisibility(analog ? View.VISIBLE : View.GONE);
+        if (!analog) {
+            tvShutterCorrected.setVisibility(View.GONE);
+            tvReciprocityNote.setVisibility(View.GONE);
+        } else {
+            updateFilmInfo();
+        }
+        recalculateIfPossible();
+    }
+
+    private void updateFilmInfo() {
+        tvFilmInfo.setText(getSelectedFilm().note);
+    }
+
+    private FilmStock getSelectedFilm() {
+        return filmStocks[spinnerFilm.getSelectedItemPosition()];
+    }
+
+    /** Ricalcola con l'ultima modalità usata (se un risultato era già a schermo). */
+    private void recalculateIfPossible() {
+        if (lastCalcMode == 1) {
+            calculateFromFStop();
+        } else if (lastCalcMode == 2) {
+            calculateFromShutter();
+        }
     }
 
     private ArrayAdapter<String> createWhiteTextAdapter(String[] items) {
@@ -169,8 +266,11 @@ public class MainActivity extends AppCompatActivity {
         double fNumber = ExposureCalculator.STANDARD_F_STOPS[spinnerFStop.getSelectedItemPosition()];
 
         try {
+            // Il tempo misurato (esposimetro) è identico nei due tab: nel tab
+            // Analog la correzione di reciprocità viene applicata in displayResult.
             ExposureCalculator.ExposureResult result =
                     ExposureCalculator.calculate(lux, iso, fNumber);
+            lastCalcMode = 1;
             displayResult(result, true);
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
@@ -187,8 +287,25 @@ public class MainActivity extends AppCompatActivity {
                 ExposureCalculator.STANDARD_SHUTTER_SPEEDS[spinnerShutter.getSelectedItemPosition()];
 
         try {
-            ExposureCalculator.ExposureResult result =
-                    ExposureCalculator.calculateFromShutter(lux, iso, shutterSpeed);
+            ExposureCalculator.ExposureResult result;
+            if (analogMode) {
+                // Il tempo scelto è quello REALE di scatto: la pellicola a
+                // tempi lunghi rende meno, quindi l'esposimetro va soddisfatto
+                // con il tempo equivalente t_eq = correct⁻¹(t) e il diaframma
+                // si apre di log₂(t/t_eq) stop: N = √(t_eq · 2^EV).
+                FilmStock film = getSelectedFilm();
+                double ev100 = ExposureCalculator.luxToEV100(lux);
+                double evISO = ExposureCalculator.adjustEVForISO(ev100, iso);
+                double tEq = ReciprocityCalculator.meteredEquivalentTime(film, shutterSpeed);
+                double fNumber = ExposureCalculator.evAndShutterSpeedToFNumber(evISO, tEq);
+                result = new ExposureCalculator.ExposureResult(lux, iso, ev100, evISO,
+                        fNumber, shutterSpeed,
+                        ExposureCalculator.nearestStandardFStop(fNumber),
+                        ExposureCalculator.nearestStandardShutterSpeed(shutterSpeed));
+            } else {
+                result = ExposureCalculator.calculateFromShutter(lux, iso, shutterSpeed);
+            }
+            lastCalcMode = 2;
             displayResult(result, false);
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
@@ -217,8 +334,10 @@ public class MainActivity extends AppCompatActivity {
                     ExposureCalculator.formatFNumber(result.fNumberStandard)));
         }
 
-        // Tempo di esposizione
-        if (!fixedFStop) {
+        // Tempo di esposizione (+ correzione di reciprocità nel tab Analog)
+        if (analogMode) {
+            displayAnalogShutter(result, fixedFStop);
+        } else if (!fixedFStop) {
             tvShutterSpeed.setText(String.format(Locale.getDefault(),
                     "Shutter speed: %s  (selected)",
                     ExposureCalculator.formatShutterSpeed(result.shutterSpeed)));
@@ -236,6 +355,64 @@ public class MainActivity extends AppCompatActivity {
         buildEquivalentsTable(result.evISO, result.iso);
     }
 
+    // ─── Righe tempo/reciprocità del tab Analog ───────────────────────────────
+    private void displayAnalogShutter(ExposureCalculator.ExposureResult result,
+                                      boolean fixedFStop) {
+        FilmStock film = getSelectedFilm();
+        StringBuilder note = new StringBuilder();
+        boolean beyondData;
+
+        if (fixedFStop) {
+            // Modalità A: il tempo misurato va allungato al tempo corretto
+            double metered = result.shutterSpeed;
+            double corrected = ReciprocityCalculator.correctedTime(film, metered);
+            double stops = ReciprocityCalculator.compensationStops(film, metered);
+            beyondData = ReciprocityCalculator.isBeyondData(film, metered);
+
+            tvShutterSpeed.setText(String.format(Locale.getDefault(),
+                    "Meter time: %s  (uncorrected)",
+                    ExposureCalculator.formatShutterSpeed(metered)));
+            if (stops > 0.005) {
+                tvShutterCorrected.setText(String.format(Locale.getDefault(),
+                        "Film time: %s  (+%.1f stop)",
+                        ExposureCalculator.formatShutterSpeed(corrected), stops));
+            } else {
+                tvShutterCorrected.setText(String.format(Locale.getDefault(),
+                        "Film time: %s  (no correction needed)",
+                        ExposureCalculator.formatShutterSpeed(corrected)));
+            }
+        } else {
+            // Modalità B: il tempo è quello reale, la compensazione è sul diaframma
+            double actual = result.shutterSpeed;
+            double tEq = ReciprocityCalculator.meteredEquivalentTime(film, actual);
+            double stops = ExposureCalculator.log2(actual / tEq);
+            beyondData = ReciprocityCalculator.isBeyondData(film, tEq);
+
+            tvFNumber.setText(String.format(Locale.getDefault(),
+                    "Aperture: %s  (film-compensated) → std: %s",
+                    ExposureCalculator.formatFNumber(result.fNumber),
+                    ExposureCalculator.formatFNumber(result.fNumberStandard)));
+            tvShutterSpeed.setText(String.format(Locale.getDefault(),
+                    "Shutter speed: %s  (selected, actual)",
+                    ExposureCalculator.formatShutterSpeed(actual)));
+            if (stops > 0.005) {
+                tvShutterCorrected.setText(String.format(Locale.getDefault(),
+                        "Reciprocity: aperture opened +%.1f stop (meter-equivalent time %s)",
+                        stops, ExposureCalculator.formatShutterSpeed(tEq)));
+            } else {
+                tvShutterCorrected.setText("Reciprocity: no correction needed");
+            }
+        }
+
+        note.append(film.note);
+        if (beyondData) {
+            note.append("\n⚠ Beyond published manufacturer data: value extrapolated.");
+        }
+        tvShutterCorrected.setVisibility(View.VISIBLE);
+        tvReciprocityNote.setText(note.toString());
+        tvReciprocityNote.setVisibility(View.VISIBLE);
+    }
+
     // ─── Tabella combinazioni equivalenti ─────────────────────────────────────
     private void buildEquivalentsTable(double evISO, int iso) {
         layoutEquivalents.removeAllViews();
@@ -250,20 +427,32 @@ public class MainActivity extends AppCompatActivity {
         tvEquivalentsHeader.setText(String.format(Locale.getDefault(),
                 "Equivalent combinations (EV %.1f, ISO %d):", evISO, iso));
 
-        // Intestazione tabella
-        LinearLayout header = makeRow(
-                "Aperture", "Shutter speed", "EV validation", true, false);
+        FilmStock film = analogMode ? getSelectedFilm() : FilmStock.DIGITAL;
+
+        // Intestazione tabella: nel tab Analog la terza colonna mostra il
+        // tempo corretto per la reciprocità invece della verifica EV.
+        LinearLayout header = analogMode
+                ? makeRow("Aperture", "Meter time", "Film time", true, false)
+                : makeRow("Aperture", "Shutter speed", "EV validation", true, false);
         layoutEquivalents.addView(header);
 
         for (int i = 0; i < combos.size(); i++) {
             double fNum = combos.get(i)[0];
             double t = combos.get(i)[1];
-            double evCheck = ExposureCalculator.fNumberAndShutterSpeedToEV(fNum, t);
+
+            String col3;
+            if (analogMode) {
+                double corrected = ReciprocityCalculator.correctedTime(film, t);
+                col3 = ExposureCalculator.formatShutterSpeed(corrected);
+            } else {
+                double evCheck = ExposureCalculator.fNumberAndShutterSpeedToEV(fNum, t);
+                col3 = String.format(Locale.getDefault(), "%.2f", evCheck);
+            }
 
             LinearLayout row = makeRow(
                     ExposureCalculator.formatFNumber(fNum),
                     ExposureCalculator.formatShutterSpeed(t),
-                    String.format(Locale.getDefault(), "%.2f", evCheck),
+                    col3,
                     false, i % 2 == 1);
             layoutEquivalents.addView(row);
         }
@@ -275,7 +464,9 @@ public class MainActivity extends AppCompatActivity {
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setPadding(dp(10), dp(6), dp(10), dp(6));
 
-        int weight1 = 3, weight2 = 3, weight3 = 2;
+        // Nel tab Analog la terza colonna ospita tempi lunghi ("1h 31' 0\""):
+        // le diamo lo stesso peso delle altre.
+        int weight1 = 3, weight2 = 3, weight3 = analogMode ? 3 : 2;
 
         TextView tv1 = makeCell(col1, weight1, isHeader);
         TextView tv2 = makeCell(col2, weight2, isHeader);
