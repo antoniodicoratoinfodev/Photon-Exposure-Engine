@@ -447,50 +447,54 @@ public class MainActivity extends AppCompatActivity {
         // Intestazione tabella: nel tab Analog la terza colonna mostra il
         // tempo corretto per la reciprocità invece della verifica EV.
         LinearLayout header = analogMode
-                ? makeRow("Aperture", "Meter time", "Film time", true, false)
-                : makeRow("Aperture", "Shutter speed", "EV validation", true, false);
+                ? makeRow("Aperture", "Meter time", "Approx.", "Film time", true, false)
+                : makeRow("Aperture", "Shutter speed", "Approx.", "EV validation", true, false);
         layoutEquivalents.addView(header);
 
         for (int i = 0; i < combos.size(); i++) {
             double fNum = combos.get(i)[0];
             double t = combos.get(i)[1];
 
-            String col3;
+            String col4;
             if (analogMode) {
                 double corrected = ReciprocityCalculator.correctedTime(film, t);
-                col3 = ExposureCalculator.formatShutterSpeed(corrected);
+                col4 = ExposureCalculator.formatShutterSpeed(corrected);
             } else {
                 double evCheck = ExposureCalculator.fNumberAndShutterSpeedToEV(fNum, t);
-                col3 = String.format(Locale.getDefault(), "%.2f", evCheck);
+                col4 = String.format(Locale.getDefault(), "%.2f", evCheck);
             }
 
             LinearLayout row = makeRow(
                     ExposureCalculator.formatFNumber(fNum),
                     ExposureCalculator.formatShutterSpeed(t),
-                    col3,
+                    ExposureCalculator.formatShutterSpeed(
+                            ExposureCalculator.nearestStandardShutterSpeed(t)),
+                    col4,
                     false, i % 2 == 1);
             layoutEquivalents.addView(row);
         }
     }
 
-    private LinearLayout makeRow(String col1, String col2, String col3,
+    private LinearLayout makeRow(String col1, String col2, String col3, String col4,
                                  boolean isHeader, boolean altRow) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         int spacing = dp10();
         row.setPadding(spacing, spacing, spacing, spacing);
 
-        // Nel tab Analog la terza colonna ospita tempi lunghi ("1h 31' 0\""):
+        // Nel tab Analog l'ultima colonna ospita tempi lunghi ("1h 31' 0\""):
         // le diamo lo stesso peso delle altre.
-        int weight1 = 3, weight2 = 3, weight3 = analogMode ? 3 : 2;
+        int weight1 = 3, weight2 = 3, weight3 = 3, weight4 = analogMode ? 3 : 2;
 
         TextView tv1 = makeCell(col1, weight1, isHeader);
         TextView tv2 = makeCell(col2, weight2, isHeader);
         TextView tv3 = makeCell(col3, weight3, isHeader);
+        TextView tv4 = makeCell(col4, weight4, isHeader);
 
         row.addView(tv1);
         row.addView(tv2);
         row.addView(tv3);
+        row.addView(tv4);
 
         if (isHeader) {
             GradientDrawable headerBg = new GradientDrawable();
