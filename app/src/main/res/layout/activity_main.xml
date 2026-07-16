@@ -35,8 +35,20 @@
 
             <TextView
                 style="@style/Widget.App.SectionLabel"
+                android:layout_width="0dp"
                 android:layout_marginStart="16dp"
+                android:layout_weight="1"
                 android:text="@string/header_eyebrow" />
+
+            <ImageButton
+                android:id="@+id/btnSavedLog"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_icon_button"
+                android:contentDescription="@string/btn_saved_log_desc"
+                android:padding="12dp"
+                android:src="@drawable/ic_saved_log"
+                app:tint="@color/text_primary" />
         </LinearLayout>
 
         <TextView
@@ -534,6 +546,18 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp"
                     android:textStyle="italic" />
+
+                <ImageButton
+                    android:id="@+id/btnSaveResult"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_icon_button"
+                    android:contentDescription="@string/btn_save_exposure_desc"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_save"
+                    app:tint="@color/accent_gold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

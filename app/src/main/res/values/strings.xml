@@ -54,6 +54,28 @@
     <string name="equivalents_result_title">Equivalent combinations (EV %1$.1f, ISO %2$d):</string>
     <string name="reciprocity_no_correction">Reciprocity: no correction needed</string>
 
+    <!-- Salvataggio esposizioni (log di scatto) -->
+    <string name="btn_save_exposure_desc">Save this exposure</string>
+    <string name="btn_saved_log_desc">Saved exposures</string>
+    <string name="toast_no_result">Calculate an exposure first.</string>
+    <string name="toast_saved">Saved as #%1$d</string>
+    <string name="save_dialog_title">Save this exposure?</string>
+    <string name="save_dialog_message">It will be stored as #%1$d with the current date and time.</string>
+    <string name="notes_label">Notes</string>
+    <string name="notes_hint">Optional notes (location, subject, filters…)</string>
+    <string name="dialog_save">Save</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_close">Close</string>
+    <string name="dialog_save_notes">Save notes</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="toast_notes_saved">Notes updated</string>
+    <string name="saved_page_title">Saved exposures</string>
+    <string name="saved_page_subtitle">Your shooting log: every saved combination, numbered in order, with date, time and notes.</string>
+    <string name="saved_empty">No saved exposures yet.\n\nCalculate an exposure, then tap the save icon in the Results card.</string>
+    <string name="delete_entry_desc">Delete this entry</string>
+    <string name="delete_dialog_title">Delete entry #%1$d?</string>
+    <string name="delete_dialog_message">This entry will be removed from your log. The numbers of the other entries stay unchanged.</string>
+
     <!-- Pagina Math & Formulas Reference -->
     <string name="btn_formulas">Math &amp; Formulas Reference</string>
     <string name="formulas_page_title">Math &amp; Formulas Reference</string>

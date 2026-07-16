@@ -27,6 +27,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
@@ -89,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
     // ricalcolare automaticamente al cambio di tab o pellicola.
     private boolean analogMode = false;
     private int lastCalcMode = 0;
+
+    // Ultimo risultato mostrato in Results: è ciò che il tasto salva scrive
+    // nel log. Null finché non viene calcolata un'esposizione.
+    private ExposureCalculator.ExposureResult lastResult;
 
     // Preferenza per il tema chiaro/scuro (default: scuro, il look originale)
     private static final String PREFS_NAME = "settings";
@@ -277,6 +282,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, FormulasActivity.class)));
         ImageButton btnTheme = findViewById(R.id.btnTheme);
         btnTheme.setOnClickListener(v -> toggleTheme());
+        ImageButton btnSavedLog = findViewById(R.id.btnSavedLog);
+        btnSavedLog.setOnClickListener(v ->
+                startActivity(new Intent(this, SavedExposuresActivity.class)));
+        ImageButton btnSaveResult = findViewById(R.id.btnSaveResult);
+        btnSaveResult.setOnClickListener(v -> onSaveResultClicked());
 
         tabMode.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -434,8 +444,63 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // ─── Salvataggio nel log esposizioni ──────────────────────────────────────
+    private void onSaveResultClicked() {
+        if (lastResult == null) {
+            showError(getString(R.string.toast_no_result));
+            return;
+        }
+
+        SavedExposure draft = buildLogEntry(ExposureLogStore.peekNextNumber(this));
+
+        View content = getLayoutInflater().inflate(R.layout.dialog_save_exposure, null);
+        ((TextView) content.findViewById(R.id.tvSaveDialogNumber)).setText(
+                getString(R.string.save_dialog_message, draft.number));
+        ((TextView) content.findViewById(R.id.tvSaveDialogTriad)).setText(draft.triadLine());
+        ((TextView) content.findViewById(R.id.tvSaveDialogStd)).setText(draft.stdLine());
+        String filmLine = draft.filmLine();
+        if (filmLine != null) {
+            TextView tvFilm = content.findViewById(R.id.tvSaveDialogFilm);
+            tvFilm.setText(filmLine);
+            tvFilm.setVisibility(View.VISIBLE);
+        }
+        EditText etNotes = content.findViewById(R.id.etSaveNotes);
+
+        new MaterialAlertDialogBuilder(this)
+                .setBackground(ContextCompat.getDrawable(this, R.drawable.bg_dialog))
+                .setView(content)
+                .setPositiveButton(R.string.dialog_save, (dialog, which) -> {
+                    draft.notes = etNotes.getText().toString().trim();
+                    draft.timestamp = System.currentTimeMillis();
+                    ExposureLogStore.add(this, draft);
+                    Toast.makeText(this, getString(R.string.toast_saved, draft.number),
+                            Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton(R.string.dialog_cancel, null)
+                .show();
+    }
+
+    /** Fotografa lo stato corrente di Results in una voce di log. */
+    private SavedExposure buildLogEntry(int number) {
+        FilmStock film = analogMode ? getSelectedFilm() : null;
+        // Il tempo corretto per la reciprocità esiste solo nel tab Analog in
+        // modalità A: in modalità B la compensazione è già dentro il diaframma.
+        double filmTime = Double.NaN;
+        if (analogMode && lastCalcMode == 1) {
+            filmTime = ReciprocityCalculator.correctedTime(film, lastResult.shutterSpeed);
+        }
+        return new SavedExposure(number, System.currentTimeMillis(),
+                lastResult.lux, lastResult.iso, lastResult.ev100, lastResult.evISO,
+                lastResult.fNumber, lastResult.shutterSpeed,
+                lastResult.fNumberStandard, lastResult.shutterSpeedStandard,
+                analogMode, lastCalcMode,
+                film != null ? film.displayName : null, filmTime, "");
+    }
+
     // ─── Visualizzazione risultati ────────────────────────────────────────────
     private void displayResult(ExposureCalculator.ExposureResult result, boolean fixedFStop) {
+        lastResult = result;
+
         // EV a ISO 100
         tvEV100.setText(String.format(Locale.getDefault(),
                 "EV₁₀₀ = %.2f", result.ev100));
