@@ -18,6 +18,7 @@ local.properties
 .idea/
 *.iml
 .cxx/
+.externalNativeBuild/
 .navigation/
 misc.xml
 
@@ -26,8 +27,14 @@ misc.xml
 # ══════════════════════════════════════════════════════════════
 *.jks
 *.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+key.properties
 keystore.properties
 signing.properties
+secrets.properties
 google-services.json
 
 # ══════════════════════════════════════════════════════════════
@@ -35,9 +42,14 @@ google-services.json
 # ══════════════════════════════════════════════════════════════
 .DS_Store
 Thumbs.db
+.claude/settings.local.json
 
 # ══════════════════════════════════════════════════════════════
 #  Log e file temporanei
 # ══════════════════════════════════════════════════════════════
 *.log
+.env
+.env.local
+.env.*.local
+*.hprof
 .kotlin/

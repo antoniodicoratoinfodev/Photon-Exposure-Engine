@@ -2,27 +2,27 @@ package com.photography.luxexposimeter;
 
 /**
  * ReciprocityCalculator
- *
+ * <p>
  * Matematica pura (senza dipendenze Android) per la correzione del difetto
  * di reciprocità (reciprocity failure / effetto Schwarzschild) delle pellicole.
- *
+ * <p>
  * Fondamento: la legge di reciprocità H = E·t vale sulla pellicola solo nel
  * range medio (~1/1000 s – 1 s). Alle lunghe esposizioni la sensibilità
  * effettiva cala (Schwarzschild, 1899: risposta ∝ E·t^p con p < 1) e il tempo
  * misurato dall'esposimetro (Tm) va allungato al tempo corretto (Tc).
- *
+ * <p>
  * Modelli implementati (parametri in FilmStock):
- *
+ * <p>
  *   1. POWER (Ilford/HARMAN, "Film Reciprocity Failure Compensation", 12/2023):
  *          Tc = Tm^P        per Tm > 1 s   (nessuna correzione per Tm ≤ 1 s)
  *      Esempio ufficiale: HP5+ a Tm = 10 s → Tc = 10^1.31 = 20.4 s.
- *
+ * <p>
  *   2. TABLE_TIME (Kodak F-4016/F-4017/F-4043, Foma):
  *      punti (Tm → Tc) del datasheet interpolati LINEARMENTE IN SCALA LOG-LOG
  *      (le curve pubblicate sono quasi rette in log-log: per Tri-X le pendenze
  *      tra i punti sono 1.40 e 1.38). Oltre l'ultimo punto si estrapola con la
  *      pendenza dell'ultimo segmento (vedi isBeyondData per l'avviso).
- *
+ * <p>
  *   3. TABLE_STOPS (Fuji Acros II / Velvia 50, Kodak E100):
  *      il datasheet dà una compensazione in stop s(t) riferita al tempo di
  *      scatto EFFETTIVO t. Il tempo corretto risolve quindi il punto fisso
@@ -31,7 +31,7 @@ package com.photography.luxexposimeter;
  *      colonna tempo del datasheet Kodak dice 15 s: il tempo più lungo subisce
  *      a sua volta più failure). L'inversa è in forma chiusa:
  *          Tm = t / 2^s(t).
- *
+ * <p>
  * Il failure ad alta intensità (tempi < 1/10.000 s) è fuori dal range
  * dell'app (minimo 1/8000 s) e non è modellato.
  */
@@ -54,18 +54,12 @@ public final class ReciprocityCalculator {
         if (metered <= film.noCorrectionBelow) {
             return metered;
         }
-        switch (film.model) {
-            case NONE:
-                return metered;
-            case POWER:
-                return Math.pow(metered, film.power);
-            case TABLE_TIME:
-                return logLogInterpolate(film.table, metered);
-            case TABLE_STOPS:
-                return fixedPointCorrected(film, metered);
-            default:
-                return metered;
-        }
+        return switch (film.model) {
+            case NONE -> metered;
+            case POWER -> Math.pow(metered, film.power);
+            case TABLE_TIME -> logLogInterpolate(film.table, metered);
+            case TABLE_STOPS -> fixedPointCorrected(film, metered);
+        };
     }
 
     /**
@@ -86,20 +80,14 @@ public final class ReciprocityCalculator {
         if (actual <= film.noCorrectionBelow) {
             return actual;
         }
-        switch (film.model) {
-            case NONE:
-                return actual;
-            case POWER:
-                return Math.pow(actual, 1.0 / film.power);
-            case TABLE_TIME:
-                // Tabella invertita: interpolazione log-log su (Tc → Tm)
-                return logLogInterpolate(swapColumns(film.table), actual);
-            case TABLE_STOPS:
-                // s(t) è indicizzata dal tempo effettivo: inversa in forma chiusa
-                return actual / Math.pow(2.0, stopsAt(film.table, actual));
-            default:
-                return actual;
-        }
+        return switch (film.model) {
+            case NONE -> actual;
+            case POWER -> Math.pow(actual, 1.0 / film.power);
+            // Tabella invertita: interpolazione log-log su (Tc → Tm)
+            case TABLE_TIME -> logLogInterpolate(film.table, actual, 1, 0);
+            // s(t) è indicizzata dal tempo effettivo: inversa in forma chiusa
+            case TABLE_STOPS -> actual / Math.pow(2.0, stopsAt(film.table, actual));
+        };
     }
 
     /**
@@ -117,16 +105,24 @@ public final class ReciprocityCalculator {
      * TABLE_STOPS: confronto sul tempo effettivo corretto.
      */
     public static boolean isBeyondData(FilmStock film, double metered) {
-        switch (film.model) {
-            case POWER:
-                return false;
-            case TABLE_STOPS:
-                return correctedTime(film, metered) > film.dataLimit;
-            case NONE:
-            case TABLE_TIME:
-            default:
-                return metered > film.dataLimit;
-        }
+        return isBeyondData(film, metered, Double.NaN);
+    }
+
+    /**
+     * Variante per i chiamanti che hanno già calcolato il tempo corretto.
+     * Evita di ripetere il punto fisso dei modelli TABLE_STOPS.
+     */
+    static boolean isBeyondData(FilmStock film, double metered, double corrected) {
+        return switch (film.model) {
+            case POWER -> false;
+            case TABLE_STOPS -> {
+                double actual = Double.isNaN(corrected)
+                        ? correctedTime(film, metered)
+                        : corrected;
+                yield actual > film.dataLimit;
+            }
+            case NONE, TABLE_TIME -> metered > film.dataLimit;
+        };
     }
 
     // ─── Interni ──────────────────────────────────────────────────────────────
@@ -137,15 +133,21 @@ public final class ReciprocityCalculator {
      * del segmento più vicino.
      */
     static double logLogInterpolate(double[][] points, double x) {
+        return logLogInterpolate(points, x, 0, 1);
+    }
+
+    /** Variante che legge direttamente le colonne indicate, senza copiare la tabella. */
+    private static double logLogInterpolate(double[][] points, double x,
+                                             int xColumn, int yColumn) {
         int n = points.length;
         int i = 1;
-        while (i < n - 1 && x > points[i][0]) {
+        while (i < n - 1 && x > points[i][xColumn]) {
             i++;
         }
-        double lx0 = Math.log(points[i - 1][0]);
-        double ly0 = Math.log(points[i - 1][1]);
-        double lx1 = Math.log(points[i][0]);
-        double ly1 = Math.log(points[i][1]);
+        double lx0 = Math.log(points[i - 1][xColumn]);
+        double ly0 = Math.log(points[i - 1][yColumn]);
+        double lx1 = Math.log(points[i][xColumn]);
+        double ly1 = Math.log(points[i][yColumn]);
         double t = (Math.log(x) - lx0) / (lx1 - lx0);
         return Math.exp(ly0 + t * (ly1 - ly0));
     }
@@ -162,19 +164,20 @@ public final class ReciprocityCalculator {
         if (t < points[0][0]) {
             return 0.0;
         }
+        double logT = Math.log(t);
         if (t <= points[n - 1][0]) {
             int i = 1;
             while (i < n - 1 && t > points[i][0]) {
                 i++;
             }
-            double f = (Math.log(t) - Math.log(points[i - 1][0]))
+            double f = (logT - Math.log(points[i - 1][0]))
                     / (Math.log(points[i][0]) - Math.log(points[i - 1][0]));
             return points[i - 1][1] + f * (points[i][1] - points[i - 1][1]);
         }
         // Estrapolazione oltre l'ultimo punto con la pendenza dell'ultimo segmento
         double slope = (points[n - 1][1] - points[n - 2][1])
                 / (Math.log(points[n - 1][0]) - Math.log(points[n - 2][0]));
-        return points[n - 1][1] + slope * (Math.log(t) - Math.log(points[n - 1][0]));
+        return points[n - 1][1] + slope * (logT - Math.log(points[n - 1][0]));
     }
 
     /**
@@ -194,13 +197,4 @@ public final class ReciprocityCalculator {
         return t;
     }
 
-    /** Scambia le colonne di una tabella {x, y} → {y, x} (per l'inversa). */
-    private static double[][] swapColumns(double[][] points) {
-        double[][] out = new double[points.length][2];
-        for (int i = 0; i < points.length; i++) {
-            out[i][0] = points[i][1];
-            out[i][1] = points[i][0];
-        }
-        return out;
-    }
 }

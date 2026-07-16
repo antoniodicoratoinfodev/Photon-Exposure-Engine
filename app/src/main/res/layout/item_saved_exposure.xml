@@ -4,7 +4,6 @@
     style="@style/Widget.App.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
     android:clickable="true"
     android:focusable="true"
     app:rippleColor="@color/accent_gold_soft">

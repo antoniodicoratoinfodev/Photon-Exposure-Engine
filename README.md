@@ -180,21 +180,24 @@ High-intensity failure (exposures < 1/10,000 s) is outside the app range.
 ```
 Photon-Exposure-Engine/
 ├── app/
-│   └── src/main/
-│       ├── AndroidManifest.xml
-│       ├── java/com/photography/luxexposimeter/
-│       │   ├── ExposureCalculator.java
-│       │   ├── FilmStock.java
-│       │   ├── ReciprocityCalculator.java
-│       │   ├── MainActivity.java
-│       │   ├── ExposureCalculatorTest.java
-│       │   └── ReciprocityCalculatorTest.java
-│       └── res/
-│           ├── layout/activity_main.xml
-│           ├── values/strings.xml
-│           ├── values/colors.xml
-│           ├── values/themes.xml
-│           └── drawable/ic_launcher_foreground.xml
+│   └── src/
+│       ├── main/
+│       │   ├── AndroidManifest.xml
+│       │   ├── java/com/photography/luxexposimeter/
+│       │   │   ├── ExposureCalculator.java
+│       │   │   ├── FilmStock.java
+│       │   │   ├── ReciprocityCalculator.java
+│       │   │   ├── MainActivity.java
+│       │   │   └── SavedExposuresActivity.java
+│       │   └── res/
+│       │       ├── layout/activity_main.xml
+│       │       ├── values/strings.xml
+│       │       ├── values/colors.xml
+│       │       ├── values/themes.xml
+│       │       └── drawable/ic_launcher_foreground.xml
+│       └── test/java/com/photography/luxexposimeter/
+│           ├── ExposureCalculatorTest.java
+│           └── ReciprocityCalculatorTest.java
 ├── build.gradle
 ├── settings.gradle
 ├── gradle.properties
@@ -271,11 +274,7 @@ Photon-Exposure-Engine/
 Run tests:
 
 ```bash
-cd app/src/main/java/com/photography/luxexposimeter
-javac ExposureCalculator.java ExposureCalculatorTest.java \
-      FilmStock.java ReciprocityCalculator.java ReciprocityCalculatorTest.java
-java ExposureCalculatorTest
-java ReciprocityCalculatorTest
+./gradlew testDebugUnitTest
 ```
 
 ---

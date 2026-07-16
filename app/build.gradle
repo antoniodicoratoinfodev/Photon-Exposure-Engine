@@ -4,19 +4,20 @@ plugins {
 
 android {
     namespace 'com.photography.luxexposimeter'
-    compileSdk 36
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.photography.luxexposimeter"
         minSdk 23
-        targetSdk 36
+        targetSdk 37
         versionCode 1
         versionName "1.0"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -33,4 +34,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+
+    testImplementation 'junit:junit:4.13.2'
 }

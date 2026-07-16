@@ -6,40 +6,43 @@ import java.util.Locale;
 
 /**
  * ExposureCalculator
- *
+ * <p>
  * Converte un valore di illuminamento in lux nella triade esposimetrica
  * fotografica (ISO, diaframma f/N, tempo di esposizione).
- *
+ * <p>
  * Formule di riferimento (fonte: Wikipedia "Exposure value", ANSI PH3.49-1971,
  * ISO 2720:1974):
- *
+ * <p>
  *   1. Da lux a EV a ISO 100 (sensore piano, costante C = 250):
  *         EV₁₀₀ = log₂(E / 2.5)
  *      dove E è l'illuminamento in lux.
- *
+ * <p>
  *   2. Correzione EV per ISO arbitrario:
  *         EV_ISO = EV₁₀₀ + log₂(ISO / 100)
- *
+ * <p>
  *   3. Definizione di EV dalla triade:
  *         EV = log₂(N² / t)
  *      dove N = f-number, t = tempo di esposizione in secondi.
- *
+ * <p>
  *   4. Dato EV e N, il tempo di esposizione è:
  *         t = N² / 2^EV
- *
+ * <p>
  *   5. Dato EV e t, il diaframma è:
  *         N = sqrt(t * 2^EV)
- *
+ * <p>
  * La costante C = 250 è il valore standard per sensori piani (flat/cosine)
  * secondo ANSI PH3.49-1971 e ISO 2720:1974.
  */
 public class ExposureCalculator {
+
+    private static final double INV_LN_2 = 1.0 / Math.log(2.0);
 
     // Costante di calibrazione per sensore piano (flat/cosine), ANSI/ISO standard
     public static final double C_FLAT = 250.0;
 
     // Costante di calibrazione per sensore emisferico (hemispherical/cardioid)
     // Minolta usa 330, Sekonic usa 340; usiamo 330 come default
+    @SuppressWarnings("unused")
     public static final double C_HEMI = 330.0;
 
     // Serie standard di f-number (diaframmi) in scala fotografica
@@ -70,6 +73,11 @@ public class ExposureCalculator {
             4000, 5000, 6400, 12800, 25600, 51200, 102400
     };
 
+    // Le ricerche del valore standard sono molto frequenti durante i ricalcoli.
+    // Memorizzare la scala logaritmica evita decine di Math.log sul thread UI.
+    private static final double[] LOG_F_STOPS = logarithmsOf(STANDARD_F_STOPS);
+    private static final double[] LOG_SHUTTER_SPEEDS = logarithmsOf(STANDARD_SHUTTER_SPEEDS);
+
     /**
      * Calcola l'EV a ISO 100 a partire dall'illuminamento in lux.
      * Formula: EV₁₀₀ = log₂(E / 2.5)
@@ -84,7 +92,7 @@ public class ExposureCalculator {
             throw new IllegalArgumentException("Il valore lux deve essere positivo.");
         }
         // EV₁₀₀ = log₂(E / 2.5)  dove 2.5 = C/100 = 250/100
-        return log2(lux / 2.5);
+        return log2(lux / (C_FLAT / 100.0));
     }
 
     /**
@@ -150,17 +158,18 @@ public class ExposureCalculator {
      * @return         f-number standard più vicino
      */
     public static double nearestStandardFStop(double fNumber) {
-        double nearest = STANDARD_F_STOPS[0];
         // Confronto in scala logaritmica per coerenza con la scala fotografica
-        double minDiff = Math.abs(Math.log(fNumber) - Math.log(nearest));
-        for (double f : STANDARD_F_STOPS) {
-            double diff = Math.abs(Math.log(fNumber) - Math.log(f));
+        double target = Math.log(fNumber);
+        int nearestIndex = 0;
+        double minDiff = Math.abs(target - LOG_F_STOPS[0]);
+        for (int i = 1; i < STANDARD_F_STOPS.length; i++) {
+            double diff = Math.abs(target - LOG_F_STOPS[i]);
             if (diff < minDiff) {
                 minDiff = diff;
-                nearest = f;
+                nearestIndex = i;
             }
         }
-        return nearest;
+        return STANDARD_F_STOPS[nearestIndex];
     }
 
     /**
@@ -170,17 +179,18 @@ public class ExposureCalculator {
      * @return              Tempo standard più vicino in secondi
      */
     public static double nearestStandardShutterSpeed(double shutterSpeed) {
-        double nearest = STANDARD_SHUTTER_SPEEDS[0];
         // Confronto in scala logaritmica per coerenza con la scala fotografica
-        double minDiff = Math.abs(Math.log(shutterSpeed) - Math.log(nearest));
-        for (double t : STANDARD_SHUTTER_SPEEDS) {
-            double diff = Math.abs(Math.log(shutterSpeed) - Math.log(t));
+        double target = Math.log(shutterSpeed);
+        int nearestIndex = 0;
+        double minDiff = Math.abs(target - LOG_SHUTTER_SPEEDS[0]);
+        for (int i = 1; i < STANDARD_SHUTTER_SPEEDS.length; i++) {
+            double diff = Math.abs(target - LOG_SHUTTER_SPEEDS[i]);
             if (diff < minDiff) {
                 minDiff = diff;
-                nearest = t;
+                nearestIndex = i;
             }
         }
-        return nearest;
+        return STANDARD_SHUTTER_SPEEDS[nearestIndex];
     }
 
     /**
@@ -265,7 +275,15 @@ public class ExposureCalculator {
      * @return   log₂(x)
      */
     public static double log2(double x) {
-        return Math.log(x) / Math.log(2.0);
+        return Math.log(x) * INV_LN_2;
+    }
+
+    private static double[] logarithmsOf(double[] values) {
+        double[] logarithms = new double[values.length];
+        for (int i = 0; i < values.length; i++) {
+            logarithms[i] = Math.log(values[i]);
+        }
+        return logarithms;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.photography.luxexposimeter;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     // Ultimo risultato mostrato in Results: è ciò che il tasto salva scrive
     // nel log. Null finché non viene calcolata un'esposizione.
     private ExposureCalculator.ExposureResult lastResult;
+    private SharedPreferences preferences;
 
     // Preferenza per il tema chiaro/scuro (default: scuro, il look originale)
     private static final String PREFS_NAME = "settings";
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         applySavedTheme();
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
@@ -150,15 +153,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
-                .putInt(KEY_LAST_FSTOP_INDEX, spinnerFStop.getSelectedItemPosition())
-                .putInt(KEY_LAST_SHUTTER_INDEX, spinnerShutter.getSelectedItemPosition())
-                .apply();
+        persistSelectionIfChanged(KEY_LAST_FSTOP_INDEX,
+                spinnerFStop.getSelectedItemPosition());
+        persistSelectionIfChanged(KEY_LAST_SHUTTER_INDEX,
+                spinnerShutter.getSelectedItemPosition());
     }
 
     /** Legge un indice salvato, ricadendo sul default se fuori dai limiti. */
     private int savedIndexOrDefault(String key, int fallback, int size) {
-        int index = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(key, fallback);
+        int index = preferences.getInt(key, fallback);
         return (index >= 0 && index < size) ? index : fallback;
     }
 
@@ -170,14 +173,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isDarkThemeSaved() {
-        return getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                .getBoolean(KEY_DARK_THEME, true);
+        return preferences.getBoolean(KEY_DARK_THEME, true);
     }
 
     private void toggleTheme() {
         boolean dark = !isDarkThemeSaved();
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                .edit().putBoolean(KEY_DARK_THEME, dark).apply();
+        preferences.edit().putBoolean(KEY_DARK_THEME, dark).apply();
         AppCompatDelegate.setDefaultNightMode(dark
                 ? AppCompatDelegate.MODE_NIGHT_YES
                 : AppCompatDelegate.MODE_NIGHT_NO);
@@ -327,14 +328,19 @@ public class MainActivity extends AppCompatActivity {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
-                        .putInt(prefKey, position).apply();
+                persistSelectionIfChanged(prefKey, position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         };
+    }
+
+    private void persistSelectionIfChanged(String key, int position) {
+        if (preferences.getInt(key, -1) != position) {
+            preferences.edit().putInt(key, position).apply();
+        }
     }
 
     // ─── Cambio tab Digital / Analog ──────────────────────────────────────────
@@ -553,8 +559,8 @@ public class MainActivity extends AppCompatActivity {
             // Modalità A: il tempo misurato va allungato al tempo corretto
             double metered = result.shutterSpeed;
             double corrected = ReciprocityCalculator.correctedTime(film, metered);
-            double stops = ReciprocityCalculator.compensationStops(film, metered);
-            beyondData = ReciprocityCalculator.isBeyondData(film, metered);
+            double stops = ExposureCalculator.log2(corrected / metered);
+            beyondData = ReciprocityCalculator.isBeyondData(film, metered, corrected);
 
             tvShutterSpeed.setText(String.format(Locale.getDefault(),
                     "Meter time: %s  (uncorrected)",
@@ -573,7 +579,7 @@ public class MainActivity extends AppCompatActivity {
             double actual = result.shutterSpeed;
             double tEq = ReciprocityCalculator.meteredEquivalentTime(film, actual);
             double stops = ExposureCalculator.log2(actual / tEq);
-            beyondData = ReciprocityCalculator.isBeyondData(film, tEq);
+            beyondData = ReciprocityCalculator.isBeyondData(film, tEq, actual);
 
             tvFNumber.setText(String.format(Locale.getDefault(),
                     "Aperture: %s  (film-compensated) → std: %s",
@@ -602,12 +608,11 @@ public class MainActivity extends AppCompatActivity {
 
     // ─── Tabella combinazioni equivalenti ─────────────────────────────────────
     private void buildEquivalentsTable(double evISO, int iso) {
-        layoutEquivalents.removeAllViews();
-
         List<double[]> combos = ExposureCalculator.getEquivalentCombinations(evISO);
 
         if (combos.isEmpty()) {
             tvEquivalentsHeader.setText(R.string.equivalents_empty);
+            hideEquivalentRowsFrom(0);
             return;
         }
 
@@ -617,10 +622,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Intestazione tabella: nel tab Analog la terza colonna mostra il
         // tempo corretto per la reciprocità invece della verifica EV.
-        LinearLayout header = analogMode
-                ? makeRow("Aperture", "Meter time", "Approx.", "Film time", true, false)
-                : makeRow("Aperture", "Shutter speed", "Approx.", "EV validation", true, false);
-        layoutEquivalents.addView(header);
+        int rowIndex = 0;
+        showEquivalentRow(rowIndex++,
+                "Aperture",
+                analogMode ? "Meter time" : "Shutter speed",
+                "Approx.",
+                analogMode ? "Film time" : "EV validation",
+                true, false);
 
         for (int i = 0; i < combos.size(); i++) {
             double fNum = combos.get(i)[0];
@@ -635,19 +643,54 @@ public class MainActivity extends AppCompatActivity {
                 col4 = String.format(Locale.getDefault(), "%.2f", evCheck);
             }
 
-            LinearLayout row = makeRow(
+            showEquivalentRow(rowIndex++,
                     ExposureCalculator.formatFNumber(fNum),
                     ExposureCalculator.formatShutterSpeed(t),
                     ExposureCalculator.formatShutterSpeed(
                             ExposureCalculator.nearestStandardShutterSpeed(t)),
                     col4,
                     false, i % 2 == 1);
+        }
+
+        // Le righe già create restano in memoria e vengono riutilizzate al
+        // prossimo calcolo; quelle eccedenti non partecipano al layout.
+        hideEquivalentRowsFrom(rowIndex);
+    }
+
+    private void showEquivalentRow(int index, String col1, String col2,
+                                   String col3, String col4,
+                                   boolean isHeader, boolean altRow) {
+        LinearLayout row;
+        if (index < layoutEquivalents.getChildCount()) {
+            row = (LinearLayout) layoutEquivalents.getChildAt(index);
+            row.setVisibility(View.VISIBLE);
+        } else {
+            row = makeRow(isHeader, altRow);
             layoutEquivalents.addView(row);
+        }
+
+        ((TextView) row.getChildAt(0)).setText(col1);
+        ((TextView) row.getChildAt(1)).setText(col2);
+        ((TextView) row.getChildAt(2)).setText(col3);
+        TextView fourthCell = (TextView) row.getChildAt(3);
+        fourthCell.setText(col4);
+
+        LinearLayout.LayoutParams params =
+                (LinearLayout.LayoutParams) fourthCell.getLayoutParams();
+        int desiredWeight = analogMode ? 3 : 2;
+        if (params.weight != desiredWeight) {
+            params.weight = desiredWeight;
+            fourthCell.setLayoutParams(params);
         }
     }
 
-    private LinearLayout makeRow(String col1, String col2, String col3, String col4,
-                                 boolean isHeader, boolean altRow) {
+    private void hideEquivalentRowsFrom(int firstHiddenIndex) {
+        for (int i = firstHiddenIndex; i < layoutEquivalents.getChildCount(); i++) {
+            layoutEquivalents.getChildAt(i).setVisibility(View.GONE);
+        }
+    }
+
+    private LinearLayout makeRow(boolean isHeader, boolean altRow) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         int spacing = dp10();
@@ -657,10 +700,10 @@ public class MainActivity extends AppCompatActivity {
         // le diamo lo stesso peso delle altre.
         int weight1 = 3, weight2 = 3, weight3 = 3, weight4 = analogMode ? 3 : 2;
 
-        TextView tv1 = makeCell(col1, weight1, isHeader);
-        TextView tv2 = makeCell(col2, weight2, isHeader);
-        TextView tv3 = makeCell(col3, weight3, isHeader);
-        TextView tv4 = makeCell(col4, weight4, isHeader);
+        TextView tv1 = makeCell(weight1, isHeader);
+        TextView tv2 = makeCell(weight2, isHeader);
+        TextView tv3 = makeCell(weight3, isHeader);
+        TextView tv4 = makeCell(weight4, isHeader);
 
         row.addView(tv1);
         row.addView(tv2);
@@ -679,12 +722,11 @@ public class MainActivity extends AppCompatActivity {
         return row;
     }
 
-    private TextView makeCell(String text, int weight, boolean isHeader) {
+    private TextView makeCell(int weight, boolean isHeader) {
         TextView tv = new TextView(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, weight);
         tv.setLayoutParams(params);
-        tv.setText(text);
         if (isHeader) {
             tv.setTextSize(12f);
             tv.setTextColor(ContextCompat.getColor(this, R.color.text_on_accent));
@@ -717,6 +759,7 @@ public class MainActivity extends AppCompatActivity {
         BRIGHT_SUN_REFLECTED(17.0, "Very bright sunlight, sand/snow reflections"),
         EXTREME_LIGHT(Double.MAX_VALUE, "Extreme brightness, strong reflections (snow, desert, arc lamps)");
 
+        private static final SceneEV[] VALUES = values();
         private final double upperBound; // limite superiore (escluso per l'ultimo)
         private final String description;
 
@@ -735,7 +778,7 @@ public class MainActivity extends AppCompatActivity {
          * @return descrizione testuale
          */
         public static String fromEV(double ev100) {
-            for (SceneEV scene : values()) {
+            for (SceneEV scene : VALUES) {
                 if (ev100 < scene.upperBound) {
                     return scene.description;
                 }

@@ -45,47 +45,63 @@ final class ExposureLogStore {
     }
 
     /** Aggiunge la voce e fa avanzare il contatore progressivo. */
-    static void add(Context context, SavedExposure entry) {
+    static synchronized void add(Context context, SavedExposure entry) {
         List<SavedExposure> entries = load(context);
         entries.add(entry);
-        persist(context, entries);
-        prefs(context).edit().putInt(KEY_NEXT_NUMBER, entry.number + 1).apply();
+        String json = serialize(entries);
+        if (json == null) return;
+
+        // Una sola transazione in memoria e una sola scrittura asincrona.
+        prefs(context).edit()
+                .putString(KEY_ENTRIES, json)
+                .putInt(KEY_NEXT_NUMBER, entry.number + 1)
+                .apply();
     }
 
     /** Aggiorna le note della voce con il numero indicato. */
-    static void updateNotes(Context context, int number, String notes) {
+    static synchronized void updateNotes(Context context, int number, String notes) {
         List<SavedExposure> entries = load(context);
+        String normalizedNotes = notes == null ? "" : notes;
         for (SavedExposure entry : entries) {
             if (entry.number == number) {
-                entry.notes = notes;
-                break;
+                if (!entry.notes.equals(normalizedNotes)) {
+                    entry.notes = normalizedNotes;
+                    persist(context, entries);
+                }
+                return;
             }
         }
-        persist(context, entries);
     }
 
     /** Elimina la voce con il numero indicato (il numero non viene riusato). */
-    static void delete(Context context, int number) {
+    static synchronized void delete(Context context, int number) {
         List<SavedExposure> entries = load(context);
         for (int i = 0; i < entries.size(); i++) {
             if (entries.get(i).number == number) {
                 entries.remove(i);
-                break;
+                persist(context, entries);
+                return;
             }
         }
-        persist(context, entries);
     }
 
     private static void persist(Context context, List<SavedExposure> entries) {
+        String json = serialize(entries);
+        if (json != null) {
+            prefs(context).edit().putString(KEY_ENTRIES, json).apply();
+        }
+    }
+
+    private static String serialize(List<SavedExposure> entries) {
         JSONArray array = new JSONArray();
         try {
             for (SavedExposure entry : entries) {
                 array.put(entry.toJson());
             }
         } catch (JSONException ignored) {
-            return; // non sovrascrivere il log con dati incompleti
+            return null; // non sovrascrivere il log con dati incompleti
         }
-        prefs(context).edit().putString(KEY_ENTRIES, array.toString()).apply();
+        return array.toString();
     }
 
     private static SharedPreferences prefs(Context context) {

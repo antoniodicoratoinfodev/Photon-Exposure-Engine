@@ -1,12 +1,13 @@
 package com.photography.luxexposimeter;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * Test unitario puro (senza dipendenze Android) per la matematica di
  * ReciprocityCalculator / FilmStock.
- *
- * Eseguibile con:
- *   javac ExposureCalculator.java FilmStock.java ReciprocityCalculator.java ReciprocityCalculatorTest.java
- *   java ReciprocityCalculatorTest
+ * <p>
+ * Eseguibile con: ./gradlew testDebugUnitTest
  */
 public class ReciprocityCalculatorTest {
 
@@ -14,6 +15,26 @@ public class ReciprocityCalculatorTest {
     private static int failed = 0;
 
     public static void main(String[] args) {
+        resetCounters();
+        runAllTests();
+        printResult();
+        if (failed > 0) System.exit(1);
+    }
+
+    @Test
+    public void allReciprocityCalculationsRemainCorrect() {
+        resetCounters();
+        runAllTests();
+        Assert.assertEquals("Sono presenti regressioni nei calcoli di reciprocità",
+                0, failed);
+    }
+
+    private static void resetCounters() {
+        passed = 0;
+        failed = 0;
+    }
+
+    private static void runAllTests() {
         System.out.println("=== Test ReciprocityCalculator ===\n");
 
         testDigitalIdentity();
@@ -27,9 +48,10 @@ public class ReciprocityCalculatorTest {
         testMonotonicityAndBounds();
         testBeyondData();
         testLongTimeFormatting();
+    }
 
+    private static void printResult() {
         System.out.println("\n=== Risultato: " + passed + " passati, " + failed + " falliti ===");
-        if (failed > 0) System.exit(1);
     }
 
     // ─── Test 1: digitale = identità ──────────────────────────────────────────
