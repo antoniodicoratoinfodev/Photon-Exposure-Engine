@@ -1,5 +1,6 @@
 package com.photography.luxexposimeter;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
@@ -28,8 +29,10 @@ public class FormulasActivity extends AppCompatActivity {
         View root = findViewById(R.id.rootScroll);
         WindowInsetsControllerCompat controller =
                 new WindowInsetsControllerCompat(getWindow(), root);
-        controller.setAppearanceLightStatusBars(false);
-        controller.setAppearanceLightNavigationBars(false);
+        boolean night = (getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        controller.setAppearanceLightStatusBars(!night);
+        controller.setAppearanceLightNavigationBars(!night);
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
             Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(0, bars.top, 0, bars.bottom);

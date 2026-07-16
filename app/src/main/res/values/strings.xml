@@ -59,6 +59,7 @@
     <string name="formulas_page_title">Math &amp; Formulas Reference</string>
     <string name="formulas_page_subtitle">The science and standards behind every result</string>
     <string name="back_content_desc">Back</string>
+    <string name="theme_toggle_desc">Switch between light and dark theme</string>
 
     <string name="formula_s1_title">1 — Lux → EV at ISO 100</string>
     <string name="formula_s1_code">EV₁₀₀ = log₂(E / 2.5)\n\nE = 2.5 × 2^EV₁₀₀</string>

@@ -14,7 +14,7 @@
         <item name="android:textColorHint">@color/text_tertiary</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/bg_dark</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
         <item name="android:windowBackground">@color/bg_dark</item>
         <item name="android:colorBackground">@color/bg_dark</item>
     </style>

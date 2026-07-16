@@ -1,6 +1,8 @@
 package com.photography.luxexposimeter;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -87,8 +91,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean analogMode = false;
     private int lastCalcMode = 0;
 
+    // Preferenza per il tema chiaro/scuro (default: scuro, il look originale)
+    private static final String PREFS_NAME = "settings";
+    private static final String KEY_DARK_THEME = "dark_theme";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        applySavedTheme();
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
@@ -99,12 +108,35 @@ public class MainActivity extends AppCompatActivity {
         setupListeners();
     }
 
+    // ─── Tema chiaro/scuro ────────────────────────────────────────────────────
+    private void applySavedTheme() {
+        AppCompatDelegate.setDefaultNightMode(isDarkThemeSaved()
+                ? AppCompatDelegate.MODE_NIGHT_YES
+                : AppCompatDelegate.MODE_NIGHT_NO);
+    }
+
+    private boolean isDarkThemeSaved() {
+        return getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getBoolean(KEY_DARK_THEME, true);
+    }
+
+    private void toggleTheme() {
+        boolean dark = !isDarkThemeSaved();
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .edit().putBoolean(KEY_DARK_THEME, dark).apply();
+        AppCompatDelegate.setDefaultNightMode(dark
+                ? AppCompatDelegate.MODE_NIGHT_YES
+                : AppCompatDelegate.MODE_NIGHT_NO);
+    }
+
     private void configureSystemBars() {
         View root = findViewById(R.id.rootScroll);
         WindowInsetsControllerCompat controller =
                 new WindowInsetsControllerCompat(getWindow(), root);
-        controller.setAppearanceLightStatusBars(false);
-        controller.setAppearanceLightNavigationBars(false);
+        boolean night = (getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        controller.setAppearanceLightStatusBars(!night);
+        controller.setAppearanceLightNavigationBars(!night);
 
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
             Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -192,6 +224,8 @@ public class MainActivity extends AppCompatActivity {
         btnCalcFromShutter.setOnClickListener(v -> calculateFromShutter());
         btnFormulas.setOnClickListener(v ->
                 startActivity(new Intent(this, FormulasActivity.class)));
+        ImageButton btnTheme = findViewById(R.id.btnTheme);
+        btnTheme.setOnClickListener(v -> toggleTheme());
 
         tabMode.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
