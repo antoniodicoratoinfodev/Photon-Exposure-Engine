@@ -1,7 +1,6 @@
 package com.photography.luxexposimeter;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -95,6 +94,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "settings";
     private static final String KEY_DARK_THEME = "dark_theme";
 
+    // Ultime selezioni dei pannelli A/B, ripristinate al prossimo avvio
+    private static final String KEY_LAST_FSTOP_INDEX = "last_fstop_index";
+    private static final String KEY_LAST_SHUTTER_INDEX = "last_shutter_index";
+    private static final int DEFAULT_FSTOP_INDEX = 11;   // f/5.6
+    private static final int DEFAULT_SHUTTER_INDEX = 36; // 1/125
+
+    // Stato da preservare quando l'activity viene ricreata (es. cambio tema)
+    private static final String STATE_LAST_CALC_MODE = "state_last_calc_mode";
+    private static final String STATE_ANALOG_MODE = "state_analog_mode";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         applySavedTheme();
@@ -106,6 +115,46 @@ public class MainActivity extends AppCompatActivity {
         bindViews();
         populateSpinners();
         setupListeners();
+    }
+
+    // ─── Stato dell'activity (sopravvive al cambio tema) ─────────────────────
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_LAST_CALC_MODE, lastCalcMode);
+        outState.putBoolean(STATE_ANALOG_MODE, analogMode);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        // Il super ripristina lo stato delle view (testo lux, spinner);
+        // dopo possiamo ricalcolare con gli stessi input di prima.
+        super.onRestoreInstanceState(savedInstanceState);
+        lastCalcMode = savedInstanceState.getInt(STATE_LAST_CALC_MODE, 0);
+        boolean analog = savedInstanceState.getBoolean(STATE_ANALOG_MODE, false);
+        if (analog && !analogMode) {
+            TabLayout.Tab tab = tabMode.getTabAt(1);
+            if (tab != null) {
+                tab.select(); // scatena setAnalogMode → recalculateIfPossible
+                return;
+            }
+        }
+        recalculateIfPossible();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
+                .putInt(KEY_LAST_FSTOP_INDEX, spinnerFStop.getSelectedItemPosition())
+                .putInt(KEY_LAST_SHUTTER_INDEX, spinnerShutter.getSelectedItemPosition())
+                .apply();
+    }
+
+    /** Legge un indice salvato, ricadendo sul default se fuori dai limiti. */
+    private int savedIndexOrDefault(String key, int fallback, int size) {
+        int index = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getInt(key, fallback);
+        return (index >= 0 && index < size) ? index : fallback;
     }
 
     // ─── Tema chiaro/scuro ────────────────────────────────────────────────────
@@ -191,7 +240,8 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> fStopAdapter = createWhiteTextAdapter(fStopLabels);
         fStopAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerFStop.setAdapter(fStopAdapter);
-        spinnerFStop.setSelection(11); // f/5.6
+        spinnerFStop.setSelection(savedIndexOrDefault(
+                KEY_LAST_FSTOP_INDEX, DEFAULT_FSTOP_INDEX, fStops.length));
 
         // Shutter speeds
         double[] shutters = ExposureCalculator.STANDARD_SHUTTER_SPEEDS;
@@ -202,7 +252,8 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> shutterAdapter = createWhiteTextAdapter(shutterLabels);
         shutterAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerShutter.setAdapter(shutterAdapter);
-        spinnerShutter.setSelection(36); // 1/125
+        spinnerShutter.setSelection(savedIndexOrDefault(
+                KEY_LAST_SHUTTER_INDEX, DEFAULT_SHUTTER_INDEX, shutters.length));
 
         // Pellicole per il tab Analog
         filmStocks = FilmStock.analogValues();
@@ -253,6 +304,27 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        // Persisti subito le selezioni dei pannelli A/B: così sopravvivono
+        // anche se il processo viene terminato senza passare da onPause.
+        spinnerFStop.setOnItemSelectedListener(
+                persistSelectionListener(KEY_LAST_FSTOP_INDEX));
+        spinnerShutter.setOnItemSelectedListener(
+                persistSelectionListener(KEY_LAST_SHUTTER_INDEX));
+    }
+
+    private AdapterView.OnItemSelectedListener persistSelectionListener(String prefKey) {
+        return new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
+                        .putInt(prefKey, position).apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
     }
 
     // ─── Cambio tab Digital / Analog ──────────────────────────────────────────
