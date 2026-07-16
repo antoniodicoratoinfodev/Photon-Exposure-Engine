@@ -1,247 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootScroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
-    android:scrollbars="none"
-    android:fillViewport="true">
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingStart="18dp"
+        android:paddingTop="18dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="28dp">
 
-        <!-- ══════════════════════════════════════════════════════════════
-             INTESTAZIONE CON BACK
-        ═══════════════════════════════════════════════════════════════ -->
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/btnBack"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_gravity="start|center_vertical"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_icon_button"
                 android:contentDescription="@string/back_content_desc"
-                android:src="@drawable/ic_arrow_back" />
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/text_primary" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/formulas_page_title"
-                android:textColor="@color/text_primary"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.02" />
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        </FrameLayout>
+                <TextView
+                    style="@style/Widget.App.SectionLabel"
+                    android:text="@string/header_eyebrow" />
 
-        <View
-            android:layout_width="36dp"
-            android:layout_height="3dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_accent_bar" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/formulas_page_title"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:paddingBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="22dp"
+            android:lineSpacingMultiplier="1.25"
             android:text="@string/formulas_page_subtitle"
-            android:textAllCaps="true"
             android:textColor="@color/text_secondary"
-            android:textSize="11sp"
-            android:letterSpacing="0.25" />
+            android:textSize="14sp" />
 
-        <!-- 1 — Lux → EV -->
         <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <TextView
-                    style="@style/Widget.App.FormulaSectionTitle"
-                    android:text="@string/formula_s1_title" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaCode"
-                    android:text="@string/formula_s1_code" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaBody"
-                    android:text="@string/formula_s1_desc" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView style="@style/Widget.App.FormulaSectionTitle" android:text="@string/formula_s1_title" />
+                <TextView style="@style/Widget.App.FormulaCode" android:text="@string/formula_s1_code" />
+                <TextView style="@style/Widget.App.FormulaBody" android:text="@string/formula_s1_desc" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 2 — Correzione ISO -->
         <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <TextView
-                    style="@style/Widget.App.FormulaSectionTitle"
-                    android:text="@string/formula_s2_title" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaCode"
-                    android:text="@string/formula_s2_code" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaBody"
-                    android:text="@string/formula_s2_desc" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView style="@style/Widget.App.FormulaSectionTitle" android:text="@string/formula_s2_title" />
+                <TextView style="@style/Widget.App.FormulaCode" android:text="@string/formula_s2_code" />
+                <TextView style="@style/Widget.App.FormulaBody" android:text="@string/formula_s2_desc" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 3 — EV dalla triade -->
         <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <TextView
-                    style="@style/Widget.App.FormulaSectionTitle"
-                    android:text="@string/formula_s3_title" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaCode"
-                    android:text="@string/formula_s3_code" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaBody"
-                    android:text="@string/formula_s3_desc" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView style="@style/Widget.App.FormulaSectionTitle" android:text="@string/formula_s3_title" />
+                <TextView style="@style/Widget.App.FormulaCode" android:text="@string/formula_s3_code" />
+                <TextView style="@style/Widget.App.FormulaBody" android:text="@string/formula_s3_desc" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 4 — Quantità derivate -->
         <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <TextView
-                    style="@style/Widget.App.FormulaSectionTitle"
-                    android:text="@string/formula_s4_title" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaCode"
-                    android:text="@string/formula_s4_code" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaBody"
-                    android:text="@string/formula_s4_desc" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView style="@style/Widget.App.FormulaSectionTitle" android:text="@string/formula_s4_title" />
+                <TextView style="@style/Widget.App.FormulaCode" android:text="@string/formula_s4_code" />
+                <TextView style="@style/Widget.App.FormulaBody" android:text="@string/formula_s4_desc" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 5 — Validazione incrociata -->
         <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <TextView
-                    style="@style/Widget.App.FormulaSectionTitle"
-                    android:text="@string/formula_s5_title" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaCode"
-                    android:text="@string/formula_s5_code" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaBody"
-                    android:text="@string/formula_s5_desc" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView style="@style/Widget.App.FormulaSectionTitle" android:text="@string/formula_s5_title" />
+                <TextView style="@style/Widget.App.FormulaCode" android:text="@string/formula_s5_code" />
+                <TextView style="@style/Widget.App.FormulaBody" android:text="@string/formula_s5_desc" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 6 — Reciprocity failure (tab Analog) -->
         <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <TextView
-                    style="@style/Widget.App.FormulaSectionTitle"
-                    android:text="@string/formula_s6_title" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaCode"
-                    android:text="@string/formula_s6_code" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaBody"
-                    android:text="@string/formula_s6_desc" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView style="@style/Widget.App.FormulaSectionTitle" android:text="@string/formula_s6_title" />
+                <TextView style="@style/Widget.App.FormulaCode" android:text="@string/formula_s6_code" />
+                <TextView style="@style/Widget.App.FormulaBody" android:text="@string/formula_s6_desc" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Note di calibrazione -->
         <com.google.android.material.card.MaterialCardView style="@style/Widget.App.FormulaCard">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <TextView
-                    style="@style/Widget.App.FormulaSectionTitle"
-                    android:text="@string/formula_notes_title"
-                    android:textColor="@color/accent_orange" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaBody"
-                    android:paddingTop="0dp"
-                    android:text="@string/formula_notes_desc" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView style="@style/Widget.App.FormulaSectionTitle" android:text="@string/formula_notes_title" android:textColor="@color/accent_orange" />
+                <TextView style="@style/Widget.App.FormulaBody" android:paddingTop="0dp" android:text="@string/formula_notes_desc" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Fonti -->
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.App.FormulaCard"
-            android:layout_marginBottom="24dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <TextView
-                    style="@style/Widget.App.FormulaSectionTitle"
-                    android:text="@string/formula_sources_title"
-                    android:textColor="@color/accent_gold" />
-
-                <TextView
-                    style="@style/Widget.App.FormulaBody"
-                    android:paddingTop="0dp"
-                    android:text="@string/formula_sources_desc" />
-
+            android:layout_marginBottom="0dp"
+            app:strokeColor="@color/result_stroke">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView style="@style/Widget.App.FormulaSectionTitle" android:text="@string/formula_sources_title" android:textColor="@color/accent_gold" />
+                <TextView style="@style/Widget.App.FormulaBody" android:paddingTop="0dp" android:text="@string/formula_sources_desc" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
     </LinearLayout>
 </ScrollView>

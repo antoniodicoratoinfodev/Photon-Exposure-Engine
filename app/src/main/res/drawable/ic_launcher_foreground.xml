@@ -1,64 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Icona: simbolo di diaframma fotografico stilizzato con raggi di luce
-    Rappresenta la conversione lux → triade esposimetrica
--->
+<!-- Black circular mark with an amber sun and surrounding exposure ring. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Cerchio esterno (diaframma) -->
+    <!-- Black circular field. -->
+    <path
+        android:fillColor="@color/launcher_bg"
+        android:pathData="M54,54m-38,0a38,38 0,1 0,76 0a38,38 0,1 0,-76 0" />
+
+    <!-- Outer exposure ring. -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#FFD700"
-        android:strokeWidth="3"
-        android:pathData="M54,54 m-28,0 a28,28 0 1,0 56,0 a28,28 0 1,0 -56,0"/>
+        android:pathData="M54,54m-32,0a32,32 0,1 0,64 0a32,32 0,1 0,-64 0"
+        android:strokeColor="@color/launcher_ring"
+        android:strokeWidth="3.2" />
 
-    <!-- Cerchio interno (apertura) -->
+    <!-- Sun core. -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#FFD700"
-        android:strokeWidth="2"
-        android:pathData="M54,54 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0"/>
+        android:pathData="M54,54m-10,0a10,10 0,1 0,20 0a10,10 0,1 0,-20 0"
+        android:strokeColor="@color/launcher_ring"
+        android:strokeWidth="3.2" />
 
-    <!-- Lamelle diaframma (6 petali) -->
+    <!-- Eight rays, kept separate from the outer ring for clarity at small sizes. -->
     <path
-        android:fillColor="#FFD700"
-        android:pathData="M54,26 L57,40 L54,40 Z"/>
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M54,82 L51,68 L54,68 Z"/>
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M26,54 L40,51 L40,54 Z"/>
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M82,54 L68,57 L68,54 Z"/>
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M34,34 L44,44 L42,46 Z"/>
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M74,74 L64,64 L66,62 Z"/>
-
-    <!-- Raggi di luce (lux) -->
-    <path
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="1.5"
-        android:pathData="M54,14 L54,20"/>
-    <path
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="1.5"
-        android:pathData="M54,88 L54,94"/>
-    <path
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="1.5"
-        android:pathData="M14,54 L20,54"/>
-    <path
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="1.5"
-        android:pathData="M88,54 L94,54"/>
-
+        android:fillColor="#00000000"
+        android:pathData="M54,36 L54,30 M54,72 L54,78 M36,54 L30,54 M72,54 L78,54 M41.3,41.3 L37.1,37.1 M66.7,66.7 L70.9,70.9 M66.7,41.3 L70.9,37.1 M41.3,66.7 L37.1,70.9"
+        android:strokeColor="@color/launcher_ring"
+        android:strokeLineCap="round"
+        android:strokeWidth="3.2" />
 </vector>

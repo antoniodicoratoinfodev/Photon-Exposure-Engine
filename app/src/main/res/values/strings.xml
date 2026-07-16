@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">PHOTON EXPOSURE ENGINE</string>
-    <string name="subtitle">Professional Photo Converter</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Photon Exposure Engine</string>
+    <string name="subtitle">A precise exposure workspace for digital and film</string>
+    <string name="header_eyebrow">Light · Exposure · Reciprocity</string>
+    <string name="section_scene_input">Scene input</string>
+    <string name="section_film_profile">Film profile</string>
+    <string name="section_equivalents">Exposure map</string>
+    <string name="results_badge">Metered</string>
+    <string name="mode_a_badge">A</string>
+    <string name="mode_b_badge">B</string>
 
     <!-- Input -->
     <string name="label_lux_input">Metering (lux)</string>
@@ -21,16 +28,16 @@
     <string name="placeholder_film_info">Select the film to apply its reciprocity failure correction.</string>
 
     <!-- Modalità A -->
-    <string name="mode_a_title">A mode – Aperture priority</string>
+    <string name="mode_a_title">Aperture priority</string>
     <string name="mode_a_desc">Choose the aperture: the app calculates the exposure time</string>
     <string name="label_fstop">Aperture (f-number)</string>
-    <string name="btn_calc_fstop">CALCULATE EXPOSURE TIME</string>
+    <string name="btn_calc_fstop">Calculate exposure time</string>
 
     <!-- Modalità B -->
-    <string name="mode_b_title">B mode – Shutter priority</string>
+    <string name="mode_b_title">Shutter priority</string>
     <string name="mode_b_desc">Choose the shutter speed: the app calculates the aperture</string>
     <string name="label_shutter">Shutter speed</string>
-    <string name="btn_calc_shutter">CALCULATE APERTURE</string>
+    <string name="btn_calc_shutter">Calculate aperture</string>
 
     <!-- Risultati -->
     <string name="results_title">Results</string>
@@ -43,16 +50,19 @@
 
     <!-- Combinazioni equivalenti -->
     <string name="equivalents_title">Equivalent combinations</string>
+    <string name="equivalents_empty">No standard combinations within the photographic range.</string>
+    <string name="equivalents_result_title">Equivalent combinations (EV %1$.1f, ISO %2$d):</string>
+    <string name="reciprocity_no_correction">Reciprocity: no correction needed</string>
 
     <!-- Pagina Math & Formulas Reference -->
     <string name="btn_formulas">Math &amp; Formulas Reference</string>
     <string name="formulas_page_title">Math &amp; Formulas Reference</string>
-    <string name="formulas_page_subtitle">The science behind the calculations</string>
+    <string name="formulas_page_subtitle">The science and standards behind every result</string>
     <string name="back_content_desc">Back</string>
 
     <string name="formula_s1_title">1 — Lux → EV at ISO 100</string>
     <string name="formula_s1_code">EV₁₀₀ = log₂(E / 2.5)\n\nE = 2.5 × 2^EV₁₀₀</string>
-    <string name="formula_s1_desc">E is the illuminance in lux measured by the light meter. The constant 2.5 equals C / 100, where C = 250 is the ANSI PH3.49-1971 / ISO 2720:1974 calibration constant for flat (cosine) sensors.</string>
+    <string name="formula_s1_desc" tools:ignore="TypographyDashes">E is the illuminance in lux measured by the light meter. The constant 2.5 equals C / 100, where C = 250 is the ANSI PH3.49-1971 / ISO 2720:1974 calibration constant for flat (cosine) sensors.</string>
 
     <string name="formula_s2_title">2 — EV correction for arbitrary ISO</string>
     <string name="formula_s2_code">EV_ISO = EV₁₀₀ + log₂(ISO / 100)</string>
@@ -75,8 +85,8 @@
     <string name="formula_s6_desc">On film, effective sensitivity drops during long exposures (low-intensity reciprocity failure): the metered time Tm must be extended to the corrected time Tc. The Analog tab applies the official manufacturer data per film stock; beyond the published data the value is extrapolated and flagged. High-intensity failure (&lt; 1/10,000 s) is outside the app range. Digital sensors are linear: no correction.</string>
 
     <string name="formula_notes_title">Calibration notes</string>
-    <string name="formula_notes_desc">C = 250 applies to flat (cosine) sensors. Hemispherical sensors use C = 330 (Minolta) or C = 340 (Sekonic). Standard f-numbers follow the ISO photographic scale (including 1/3 and 1/2 stops); shutter speeds range from 30s to 1/8000s. Comparisons are logarithmic to match exposure stops.</string>
+    <string name="formula_notes_desc">C = 250 applies to flat (cosine) sensors. Hemispherical sensors use C = 330 (Minolta) or C = 340 (Sekonic). Standard f-numbers follow the ISO photographic scale (including ⅓ and ½ stops); shutter speeds range from 30s to 1/8000s. Comparisons are logarithmic to match exposure stops.</string>
 
     <string name="formula_sources_title">Sources</string>
-    <string name="formula_sources_desc">• Wikipedia — \"Exposure value\": formal EV definition and lux/EV reference table\n\n• ANSI PH3.49-1971 — calibration constant C = 250\n\n• ISO 2720:1974 — international light meter standard\n\n• ANSI PH2.7-1986 — EV reference table for real-world scenes\n\n• HARMAN Technology — \"Film Reciprocity Failure Compensation\" (Dec 2023): Tc = Tm^P factors for Ilford/Kentmere films\n\n• Kodak F-4016 (T-Max 100), F-4017 (Tri-X), F-4043 (T-Max 400) — long exposure adjustment tables\n\n• Fujifilm AF3-0258E (Acros II), RVP50 Data Guide (Velvia 50), Provia 100F datasheet\n\n• Foma — Fomapan 100/400 datasheets (Schwarzschild effect tables)</string>
+    <string name="formula_sources_desc" tools:ignore="TypographyDashes">• Wikipedia — \"Exposure value\": formal EV definition and lux/EV reference table\n\n• ANSI PH3.49-1971 — calibration constant C = 250\n\n• ISO 2720:1974 — international light meter standard\n\n• ANSI PH2.7-1986 — EV reference table for real-world scenes\n\n• HARMAN Technology — \"Film Reciprocity Failure Compensation\" (Dec 2023): Tc = Tm^P factors for Ilford/Kentmere films\n\n• Kodak F-4016 (T-Max 100), F-4017 (Tri-X), F-4043 (T-Max 400) — long exposure adjustment tables\n\n• Fujifilm AF3-0258E (Acros II), RVP50 Data Guide (Velvia 50), Provia 100F datasheet\n\n• Foma — Fomapan 100/400 datasheets (Schwarzschild effect tables)</string>
 </resources>

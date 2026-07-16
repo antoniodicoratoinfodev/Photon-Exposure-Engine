@@ -3,8 +3,6 @@ package com.photography.luxexposimeter;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +17,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -28,20 +31,20 @@ import java.util.Locale;
 
 /**
  * MainActivity — Convertitore Lux → Triade Esposimetrica
- *
+ * <p>
  * L'utente inserisce:
  *   - Valore in lux (misurato con l'esposimetro)
  *   - ISO desiderato (selezionabile da spinner o seekbar)
  *   - Modalità di calcolo:
  *       A) Fisso il diaframma → calcola il tempo
  *       B) Fisso il tempo    → calcola il diaframma
- *
+ * <p>
  * Due tab in testa alla pagina:
  *   - Digital: matematica esposimetrica pura (legge di reciprocità valida)
  *   - Analog:  stessa app, ma il tempo viene corretto per il difetto di
  *              reciprocità (reciprocity failure) della pellicola selezionata;
  *              in modalità B è il diaframma a essere compensato.
- *
+ * <p>
  * L'app mostra:
  *   - EV a ISO 100
  *   - EV corretto per l'ISO scelto
@@ -76,9 +79,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvEquivalentsHeader;
 
     // ─── Dati ─────────────────────────────────────────────────────────────────
-    private String[] isoLabels;
-    private String[] fStopLabels;
-    private String[] shutterLabels;
     private FilmStock[] filmStocks;
 
     // Stato del tab (false = Digital, true = Analog) e ultima modalità
@@ -90,11 +90,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
+        configureSystemBars();
         bindViews();
         populateSpinners();
         setupListeners();
+    }
+
+    private void configureSystemBars() {
+        View root = findViewById(R.id.rootScroll);
+        WindowInsetsControllerCompat controller =
+                new WindowInsetsControllerCompat(getWindow(), root);
+        controller.setAppearanceLightStatusBars(false);
+        controller.setAppearanceLightNavigationBars(false);
+
+        ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
+            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            view.setPadding(0, bars.top, 0, bars.bottom);
+            return windowInsets;
+        });
     }
 
     // ─── Binding ──────────────────────────────────────────────────────────────
@@ -125,34 +141,34 @@ public class MainActivity extends AppCompatActivity {
     private void populateSpinners() {
         // ISO
         int[] isoValues = ExposureCalculator.STANDARD_ISO_VALUES;
-        isoLabels = new String[isoValues.length];
+        String[] isoLabels = new String[isoValues.length];
         for (int i = 0; i < isoValues.length; i++) {
             isoLabels[i] = "ISO " + isoValues[i];
         }
         ArrayAdapter<String> isoAdapter = createWhiteTextAdapter(isoLabels);
-        isoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        isoAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerISO.setAdapter(isoAdapter);
         spinnerISO.setSelection(4); // ISO 100
 
         // F-stop
         double[] fStops = ExposureCalculator.STANDARD_F_STOPS;
-        fStopLabels = new String[fStops.length];
+        String[] fStopLabels = new String[fStops.length];
         for (int i = 0; i < fStops.length; i++) {
             fStopLabels[i] = ExposureCalculator.formatFNumber(fStops[i]);
         }
         ArrayAdapter<String> fStopAdapter = createWhiteTextAdapter(fStopLabels);
-        fStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        fStopAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerFStop.setAdapter(fStopAdapter);
         spinnerFStop.setSelection(11); // f/5.6
 
         // Shutter speeds
         double[] shutters = ExposureCalculator.STANDARD_SHUTTER_SPEEDS;
-        shutterLabels = new String[shutters.length];
+        String[] shutterLabels = new String[shutters.length];
         for (int i = 0; i < shutters.length; i++) {
             shutterLabels[i] = ExposureCalculator.formatShutterSpeed(shutters[i]);
         }
         ArrayAdapter<String> shutterAdapter = createWhiteTextAdapter(shutterLabels);
-        shutterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        shutterAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerShutter.setAdapter(shutterAdapter);
         spinnerShutter.setSelection(36); // 1/125
 
@@ -165,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             if (filmStocks[i] == FilmStock.ILFORD_HP5_PLUS) hp5Index = i;
         }
         ArrayAdapter<String> filmAdapter = createWhiteTextAdapter(filmLabels);
-        filmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        filmAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerFilm.setAdapter(filmAdapter);
         spinnerFilm.setSelection(hp5Index); // Ilford HP5+ come default
     }
@@ -236,13 +252,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayAdapter<String> createWhiteTextAdapter(String[] items) {
-        return new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items) {
+        return new ArrayAdapter<>(this, R.layout.spinner_item, items) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView text = view.findViewById(android.R.id.text1);
-                text.setTextColor(getResources().getColor(R.color.text_primary));
+                text.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.text_primary));
                 return view;
             }
 
@@ -250,8 +266,8 @@ public class MainActivity extends AppCompatActivity {
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView text = view.findViewById(android.R.id.text1);
-                text.setTextColor(getResources().getColor(R.color.text_primary));
-                text.setBackgroundColor(getResources().getColor(R.color.card_bg));
+                text.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.text_primary));
+                text.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.card_bg));
                 return view;
             }
         };
@@ -400,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
                         "Reciprocity: aperture opened +%.1f stop (meter-equivalent time %s)",
                         stops, ExposureCalculator.formatShutterSpeed(tEq)));
             } else {
-                tvShutterCorrected.setText("Reciprocity: no correction needed");
+                tvShutterCorrected.setText(R.string.reciprocity_no_correction);
             }
         }
 
@@ -420,12 +436,11 @@ public class MainActivity extends AppCompatActivity {
         List<double[]> combos = ExposureCalculator.getEquivalentCombinations(evISO);
 
         if (combos.isEmpty()) {
-            tvEquivalentsHeader.setText("No standard combinations within the photographic range.");
+            tvEquivalentsHeader.setText(R.string.equivalents_empty);
             return;
         }
 
-        tvEquivalentsHeader.setText(String.format(Locale.getDefault(),
-                "Equivalent combinations (EV %.1f, ISO %d):", evISO, iso));
+        tvEquivalentsHeader.setText(getString(R.string.equivalents_result_title, evISO, iso));
 
         FilmStock film = analogMode ? getSelectedFilm() : FilmStock.DIGITAL;
 
@@ -462,7 +477,8 @@ public class MainActivity extends AppCompatActivity {
                                  boolean isHeader, boolean altRow) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setPadding(dp(10), dp(6), dp(10), dp(6));
+        int spacing = dp10();
+        row.setPadding(spacing, spacing, spacing, spacing);
 
         // Nel tab Analog la terza colonna ospita tempi lunghi ("1h 31' 0\""):
         // le diamo lo stesso peso delle altre.
@@ -478,11 +494,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (isHeader) {
             GradientDrawable headerBg = new GradientDrawable();
-            headerBg.setColor(getResources().getColor(R.color.header_row_bg));
-            headerBg.setCornerRadius(dp(8));
+            headerBg.setColor(ContextCompat.getColor(this, R.color.header_row_bg));
+            headerBg.setCornerRadius(spacing);
             row.setBackground(headerBg);
         } else if (altRow) {
-            row.setBackgroundColor(getResources().getColor(R.color.row_alt));
+            row.setBackgroundColor(ContextCompat.getColor(this, R.color.row_alt));
         }
 
         return row;
@@ -496,18 +512,18 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(text);
         if (isHeader) {
             tv.setTextSize(12f);
-            tv.setTextColor(getResources().getColor(R.color.accent_blue_light));
+            tv.setTextColor(ContextCompat.getColor(this, R.color.text_on_accent));
             tv.setTypeface(null, android.graphics.Typeface.BOLD);
         } else {
             tv.setTextSize(13f);
-            tv.setTextColor(getResources().getColor(R.color.text_primary));
+            tv.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
             tv.setTypeface(android.graphics.Typeface.MONOSPACE);
         }
         return tv;
     }
 
-    private int dp(int dps) {
-        return Math.round(getResources().getDisplayMetrics().density * dps);
+    private int dp10() {
+        return Math.round(getResources().getDisplayMetrics().density * 10);
     }
 
     // ─── ENUM per la descrizione della scena (sostituisce il vecchio metodo if/else) ───
