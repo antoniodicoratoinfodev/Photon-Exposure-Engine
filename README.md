@@ -37,9 +37,20 @@ The official, ready-to-use version is available for purchase on the Google Play 
 
 ## 📸 Screenshots
 
-| | | |
+Complete interface coverage in both light and dark themes.
+
+| Screen | Dark theme | Light theme |
 |---|---|---|
-| ![Screenshot 1](Samples/1.png) | ![Screenshot 2](Samples/2.png) | ![Screenshot 3](Samples/3.png) |
+| Digital workspace | <a href="screenshots/dark_01_digital_top.png"><img src="screenshots/dark_01_digital_top.png" alt="Digital workspace in dark theme" width="220"></a> | <a href="screenshots/light_01_digital_top.png"><img src="screenshots/light_01_digital_top.png" alt="Digital workspace in light theme" width="220"></a> |
+| Digital result | <a href="screenshots/dark_02_digital_results.png"><img src="screenshots/dark_02_digital_results.png" alt="Digital result in dark theme" width="220"></a> | <a href="screenshots/light_02_digital_results.png"><img src="screenshots/light_02_digital_results.png" alt="Digital result in light theme" width="220"></a> |
+| Exposure map | <a href="screenshots/dark_03_digital_exposuremap.png"><img src="screenshots/dark_03_digital_exposuremap.png" alt="Exposure map in dark theme" width="220"></a> | <a href="screenshots/light_03_digital_exposuremap.png"><img src="screenshots/light_03_digital_exposuremap.png" alt="Exposure map in light theme" width="220"></a> |
+| Formula reference, part 1 | <a href="screenshots/dark_04_formulas_1.png"><img src="screenshots/dark_04_formulas_1.png" alt="Formula reference part one in dark theme" width="220"></a> | <a href="screenshots/light_04_formulas_1.png"><img src="screenshots/light_04_formulas_1.png" alt="Formula reference part one in light theme" width="220"></a> |
+| Formula reference, part 2 | <a href="screenshots/dark_05_formulas_2.png"><img src="screenshots/dark_05_formulas_2.png" alt="Formula reference part two in dark theme" width="220"></a> | <a href="screenshots/light_05_formulas_2.png"><img src="screenshots/light_05_formulas_2.png" alt="Formula reference part two in light theme" width="220"></a> |
+| Analog workspace | <a href="screenshots/dark_06_analog_top.png"><img src="screenshots/dark_06_analog_top.png" alt="Analog workspace in dark theme" width="220"></a> | <a href="screenshots/light_06_analog_top.png"><img src="screenshots/light_06_analog_top.png" alt="Analog workspace in light theme" width="220"></a> |
+| Analog result | <a href="screenshots/dark_07_analog_result.png"><img src="screenshots/dark_07_analog_result.png" alt="Analog result in dark theme" width="220"></a> | <a href="screenshots/light_07_analog_result.png"><img src="screenshots/light_07_analog_result.png" alt="Analog result in light theme" width="220"></a> |
+| Save exposure dialog | <a href="screenshots/dark_08_dialog_save.png"><img src="screenshots/dark_08_dialog_save.png" alt="Save exposure dialog in dark theme" width="220"></a> | <a href="screenshots/light_08_dialog_save.png"><img src="screenshots/light_08_dialog_save.png" alt="Save exposure dialog in light theme" width="220"></a> |
+| Saved exposures | <a href="screenshots/dark_09_saved.png"><img src="screenshots/dark_09_saved.png" alt="Saved exposures in dark theme" width="220"></a> | <a href="screenshots/light_09_saved.png"><img src="screenshots/light_09_saved.png" alt="Saved exposures in light theme" width="220"></a> |
+| Saved exposure detail | <a href="screenshots/dark_10_dialog_detail.png"><img src="screenshots/dark_10_dialog_detail.png" alt="Saved exposure detail in dark theme" width="220"></a> | <a href="screenshots/light_10_dialog_detail.png"><img src="screenshots/light_10_dialog_detail.png" alt="Saved exposure detail in light theme" width="220"></a> |
 
 ---
 
