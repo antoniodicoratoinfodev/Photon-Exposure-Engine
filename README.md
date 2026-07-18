@@ -138,20 +138,6 @@ Both suites are pure Java (no Android dependencies). Run them via Gradle:
 ./gradlew testDebugUnitTest
 ```
 
-Each class also exposes a `main()` that prints a per-assertion pass/fail report,
-so the suites can be run standalone without Gradle or the Android SDK. Only the
-JUnit jar is needed on the classpath:
-
-```bash
-JUNIT=$(find ~/.gradle/caches -name 'junit-4.13.2.jar' | head -1)
-cd app/src/main/java/com/photography/luxexposimeter
-javac -cp "$JUNIT" -d /tmp/pee \
-      ExposureCalculator.java FilmStock.java ReciprocityCalculator.java \
-      ../../../../../test/java/com/photography/luxexposimeter/*.java
-java -cp "/tmp/pee:$JUNIT" com.photography.luxexposimeter.ExposureCalculatorTest
-java -cp "/tmp/pee:$JUNIT" com.photography.luxexposimeter.ReciprocityCalculatorTest
-```
-
 ## 📄 License
 
 Copyright © 2026 Antonio Dicorato. All rights reserved.
@@ -216,9 +202,18 @@ La versione ufficiale e pronta all'uso è disponibile per l'acquisto su Google P
 
 ## 📸 Screenshot
 
-| | | |
+Copertura completa dell'interfaccia nei temi chiaro e scuro.
+
+| Schermata | Tema scuro | Tema chiaro |
 |---|---|---|
-| ![Screenshot 1](Samples/1.png) | ![Screenshot 2](Samples/2.png) | ![Screenshot 3](Samples/3.png) |
+| Spazio di lavoro digitale | <a href="screenshots/dark_01_digital_top.png"><img src="screenshots/dark_01_digital_top.png" alt="Spazio di lavoro digitale nel tema scuro" width="220"></a> | <a href="screenshots/light_01_digital_top.png"><img src="screenshots/light_01_digital_top.png" alt="Spazio di lavoro digitale nel tema chiaro" width="220"></a> |
+| Risultato digitale | <a href="screenshots/dark_02_digital_results.png"><img src="screenshots/dark_02_digital_results.png" alt="Risultato digitale nel tema scuro" width="220"></a> | <a href="screenshots/light_02_digital_results.png"><img src="screenshots/light_02_digital_results.png" alt="Risultato digitale nel tema chiaro" width="220"></a> |
+| Mappa dell'esposizione | <a href="screenshots/dark_03_digital_exposuremap.png"><img src="screenshots/dark_03_digital_exposuremap.png" alt="Mappa dell'esposizione nel tema scuro" width="220"></a> | <a href="screenshots/light_03_digital_exposuremap.png"><img src="screenshots/light_03_digital_exposuremap.png" alt="Mappa dell'esposizione nel tema chiaro" width="220"></a> |
+| Spazio di lavoro analogico | <a href="screenshots/dark_06_analog_top.png"><img src="screenshots/dark_06_analog_top.png" alt="Spazio di lavoro analogico nel tema scuro" width="220"></a> | <a href="screenshots/light_06_analog_top.png"><img src="screenshots/light_06_analog_top.png" alt="Spazio di lavoro analogico nel tema chiaro" width="220"></a> |
+| Risultato analogico | <a href="screenshots/dark_07_analog_result.png"><img src="screenshots/dark_07_analog_result.png" alt="Risultato analogico nel tema scuro" width="220"></a> | <a href="screenshots/light_07_analog_result.png"><img src="screenshots/light_07_analog_result.png" alt="Risultato analogico nel tema chiaro" width="220"></a> |
+| Dialog di salvataggio dell'esposizione | <a href="screenshots/dark_08_dialog_save.png"><img src="screenshots/dark_08_dialog_save.png" alt="Dialog di salvataggio dell'esposizione nel tema scuro" width="220"></a> | <a href="screenshots/light_08_dialog_save.png"><img src="screenshots/light_08_dialog_save.png" alt="Dialog di salvataggio dell'esposizione nel tema chiaro" width="220"></a> |
+| Esposizioni salvate | <a href="screenshots/dark_09_saved.png"><img src="screenshots/dark_09_saved.png" alt="Esposizioni salvate nel tema scuro" width="220"></a> | <a href="screenshots/light_09_saved.png"><img src="screenshots/light_09_saved.png" alt="Esposizioni salvate nel tema chiaro" width="220"></a> |
+| Dettaglio dell'esposizione salvata | <a href="screenshots/dark_10_dialog_detail.png"><img src="screenshots/dark_10_dialog_detail.png" alt="Dettaglio dell'esposizione salvata nel tema scuro" width="220"></a> | <a href="screenshots/light_10_dialog_detail.png"><img src="screenshots/light_10_dialog_detail.png" alt="Dettaglio dell'esposizione salvata nel tema chiaro" width="220"></a> |
 
 ## ⚙️ Funzionalità dell'app
 
@@ -306,24 +301,10 @@ Photon-Exposure-Engine/
 ## 🧪 Test unitari
 
 Le suite di test coprono il calcolatore di esposizione e il comportamento del
-tab Analog. Entrambe sono in Java puro (nessuna dipendenza Android). Esecuzione con Gradle:
+tab Analog. Entrambe sono in Java puro (nessuna dipendenza Android). Esegui con Gradle:
 
 ```bash
 ./gradlew testDebugUnitTest
-```
-
-Ogni classe espone anche un `main()` che stampa un report pass/fail per singola
-asserzione, quindi le suite si possono eseguire in standalone senza Gradle né
-Android SDK. Serve solo il jar di JUnit nel classpath:
-
-```bash
-JUNIT=$(find ~/.gradle/caches -name 'junit-4.13.2.jar' | head -1)
-cd app/src/main/java/com/photography/luxexposimeter
-javac -cp "$JUNIT" -d /tmp/pee \
-      ExposureCalculator.java FilmStock.java ReciprocityCalculator.java \
-      ../../../../../test/java/com/photography/luxexposimeter/*.java
-java -cp "/tmp/pee:$JUNIT" com.photography.luxexposimeter.ExposureCalculatorTest
-java -cp "/tmp/pee:$JUNIT" com.photography.luxexposimeter.ReciprocityCalculatorTest
 ```
 
 ## 📄 Licenza
