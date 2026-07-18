@@ -1,0 +1,25 @@
+{
+  "name": "photon-exposure-ds",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Photon Exposure Engine design system — web counterpart of the Android app's visual language",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "style": "dist/photon.css",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js --external:react --external:react-dom --external:react/jsx-runtime --jsx=automatic && tsc -p tsconfig.json && cp src/photon.css dist/photon.css"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "esbuild": "^0.24.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  }
+}

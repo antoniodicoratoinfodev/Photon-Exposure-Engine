@@ -1,0 +1,583 @@
+/* ════════════════════════════════════════════════════════════════
+   Photon Exposure Engine — Design System
+   Tokens + component styles. Dark-first (the app's original palette);
+   light theme via data-theme="light" on the PhotonProvider root.
+   Values are a 1:1 port of app/src/main/res/values{,-night}/colors.xml.
+   ════════════════════════════════════════════════════════════════ */
+
+:root,
+.photon-root {
+  /* fonts */
+  --photon-font-sans: system-ui, sans-serif;
+  --photon-font-mono: ui-monospace, monospace;
+
+  /* dark palette (default) */
+  --photon-bg: #0c0d0f;
+  --photon-bg-elevated: #111317;
+  --photon-card: #17191d;
+  --photon-card-result: #1c1b17;
+  --photon-stroke: #2b2e34;
+  --photon-stroke-strong: #3a3d43;
+  --photon-stroke-result: rgba(242, 184, 75, 0.4);
+  --photon-field: #111216;
+  --photon-row-alt: #1c1e23;
+  --photon-header-row: #f2b84b;
+  --photon-divider: #2a2c31;
+
+  --photon-text: #f5f3ed;
+  --photon-text-2: #aaa8a1;
+  --photon-text-3: #777871;
+  --photon-text-on-accent: #17130b;
+
+  --photon-gold: #f2b84b;
+  --photon-gold-soft: rgba(242, 184, 75, 0.15);
+  --photon-value: #ffcf72;
+  --photon-orange: #ff7a52;
+  --photon-on-orange: #1c0b06;
+
+  --photon-glow-start: rgba(242, 184, 75, 0.13);
+  --photon-glow-end: rgba(242, 184, 75, 0);
+
+  /* radii */
+  --photon-r-card: 22px;
+  --photon-r-card-result: 24px;
+  --photon-r-field: 14px;
+  --photon-r-badge: 10px;
+  --photon-r-glow: 12px;
+  --photon-r-track: 16px;
+  --photon-r-indicator: 12px;
+}
+
+[data-theme="light"],
+.photon-root[data-theme="light"] {
+  --photon-bg: #e9eaee;
+  --photon-bg-elevated: #dfe1e6;
+  --photon-card: #f6f6f8;
+  --photon-card-result: #f8f3e7;
+  --photon-stroke: #d3d5db;
+  --photon-stroke-strong: #bfc2c9;
+  --photon-stroke-result: rgba(181, 131, 28, 0.4);
+  --photon-field: #edeef1;
+  --photon-row-alt: #edeef2;
+  --photon-header-row: #e8ae3c;
+  --photon-divider: #d8dade;
+
+  --photon-text: #191a1e;
+  --photon-text-2: #54565c;
+  --photon-text-3: #83858b;
+  --photon-text-on-accent: #17130b;
+
+  --photon-gold: #b5831c;
+  --photon-gold-soft: rgba(181, 131, 28, 0.15);
+  --photon-value: #7e5c08;
+  --photon-orange: #d9481f;
+  --photon-on-orange: #fff4ef;
+
+  --photon-glow-start: rgba(181, 131, 28, 0.13);
+  --photon-glow-end: rgba(181, 131, 28, 0);
+}
+
+/* ── Root ──────────────────────────────────────────────────────── */
+
+.photon-root {
+  font-family: var(--photon-font-sans);
+  background: var(--photon-bg);
+  color: var(--photon-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.photon-root,
+.photon-root *,
+.photon-root *::before,
+.photon-root *::after {
+  box-sizing: border-box;
+}
+
+.photon-root--fullscreen {
+  min-height: 100vh;
+}
+
+/* ── Surfaces ──────────────────────────────────────────────────── */
+
+.photon-card {
+  background: var(--photon-card);
+  border: 1px solid var(--photon-stroke);
+  border-radius: var(--photon-r-card);
+  padding: 20px;
+}
+
+.photon-card--accent {
+  border-color: var(--photon-stroke-result);
+}
+
+.photon-card--result {
+  background: var(--photon-card-result);
+  border-color: var(--photon-stroke-result);
+  border-radius: var(--photon-r-card-result);
+}
+
+.photon-result-glow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: linear-gradient(90deg, var(--photon-glow-start), var(--photon-glow-end));
+  border-radius: var(--photon-r-glow);
+  padding: 14px;
+}
+
+/* ── Typography ────────────────────────────────────────────────── */
+
+.photon-section-label {
+  color: var(--photon-gold);
+  font-family: var(--photon-font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.photon-field-label {
+  color: var(--photon-text-2);
+  font-family: var(--photon-font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.photon-readout {
+  font-family: var(--photon-font-mono);
+  line-height: 1.15;
+}
+
+.photon-readout--primary { color: var(--photon-text); }
+.photon-readout--secondary { color: var(--photon-text-2); }
+.photon-readout--value { color: var(--photon-value); font-weight: 700; }
+.photon-readout--gold { color: var(--photon-gold); font-weight: 700; }
+
+.photon-readout--sm { font-size: 13px; }
+.photon-readout--md { font-size: 15px; }
+.photon-readout--lg { font-size: 18px; }
+
+.photon-divider {
+  border: none;
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  background: var(--photon-divider);
+}
+
+/* ── Page header ───────────────────────────────────────────────── */
+
+.photon-page-header__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.photon-page-header__eyebrow {
+  flex: 1;
+  min-width: 0;
+}
+
+.photon-page-header__title {
+  margin: 12px 0 0;
+  font-size: 29px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--photon-text);
+}
+
+.photon-page-header__subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--photon-text-2);
+}
+
+/* ── Fields ────────────────────────────────────────────────────── */
+
+.photon-textfield {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photon-textfield__box {
+  display: flex;
+  align-items: center;
+  background: var(--photon-field);
+  border: 1px solid var(--photon-gold);
+  border-radius: var(--photon-r-field);
+}
+
+.photon-textfield__box:focus-within {
+  box-shadow: 0 0 0 1px var(--photon-gold);
+}
+
+.photon-textfield__input {
+  flex: 1;
+  min-width: 0;
+  height: 64px;
+  padding: 0 16px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--photon-text);
+  font-family: var(--photon-font-sans);
+  font-weight: 500;
+  font-size: 26px;
+}
+
+.photon-textfield--medium .photon-textfield__input {
+  height: 52px;
+  font-size: 16px;
+}
+
+.photon-textfield__input::placeholder {
+  color: var(--photon-text-3);
+}
+
+.photon-textfield__suffix {
+  padding-right: 16px;
+  color: var(--photon-gold);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.photon-textfield__note {
+  margin-top: 1px;
+  font-family: var(--photon-font-mono);
+  font-size: 11px;
+  color: var(--photon-text-3);
+}
+
+.photon-textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photon-textarea__control {
+  width: 100%;
+  min-height: 88px;
+  padding: 14px;
+  background: var(--photon-field);
+  border: 1px solid var(--photon-stroke-strong);
+  border-radius: var(--photon-r-field);
+  outline: none;
+  resize: vertical;
+  color: var(--photon-text);
+  font-family: var(--photon-font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.photon-textarea__control:focus {
+  border-color: var(--photon-gold);
+}
+
+.photon-textarea__control::placeholder {
+  color: var(--photon-text-3);
+}
+
+.photon-select {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photon-select__box {
+  position: relative;
+  height: 56px;
+  background: var(--photon-field);
+  border: 1px solid var(--photon-stroke-strong);
+  border-radius: var(--photon-r-field);
+}
+
+.photon-select__box:focus-within {
+  border-color: var(--photon-gold);
+}
+
+.photon-select__control {
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  padding: 0 40px 0 16px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--photon-text);
+  font-family: var(--photon-font-sans);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.photon-select__control option {
+  background: var(--photon-card);
+  color: var(--photon-text);
+}
+
+.photon-select__chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--photon-gold);
+  pointer-events: none;
+  display: flex;
+}
+
+/* ── Actions ───────────────────────────────────────────────────── */
+
+.photon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 54px;
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--photon-r-field);
+  font-family: var(--photon-font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: filter 120ms ease, background-color 120ms ease;
+}
+
+.photon-button--primary {
+  background: var(--photon-gold);
+  color: var(--photon-text-on-accent);
+}
+
+.photon-button--primary:hover {
+  filter: brightness(1.07);
+}
+
+.photon-button--outlined {
+  background: transparent;
+  border: 1px solid var(--photon-stroke-strong);
+  color: var(--photon-text);
+}
+
+.photon-button--outlined:hover {
+  background: var(--photon-gold-soft);
+}
+
+.photon-button--full {
+  width: 100%;
+}
+
+.photon-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.photon-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  background: var(--photon-card);
+  border: 1px solid var(--photon-stroke);
+  border-radius: var(--photon-r-field);
+  color: var(--photon-text);
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.photon-icon-button:hover {
+  background: var(--photon-gold-soft);
+}
+
+.photon-icon-button--sm {
+  width: 40px;
+  height: 40px;
+}
+
+.photon-icon-button--gold { color: var(--photon-gold); }
+.photon-icon-button--danger { color: var(--photon-orange); }
+
+/* ── Segmented tabs ────────────────────────────────────────────── */
+
+.photon-tabs {
+  display: flex;
+  height: 56px;
+  padding: 4px;
+  background: var(--photon-bg-elevated);
+  border: 1px solid var(--photon-stroke);
+  border-radius: var(--photon-r-track);
+}
+
+.photon-tabs__tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  border-radius: var(--photon-r-indicator);
+  color: var(--photon-text-2);
+  font-family: var(--photon-font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.photon-tabs__tab[aria-selected="true"] {
+  background: var(--photon-gold);
+  color: var(--photon-text-on-accent);
+}
+
+/* ── Badges ────────────────────────────────────────────────────── */
+
+.photon-badge--mode {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  background: var(--photon-gold-soft);
+  border: 1px solid var(--photon-stroke-result);
+  border-radius: var(--photon-r-badge);
+  color: var(--photon-gold);
+  font-family: var(--photon-font-sans);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.photon-badge--status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--photon-gold-soft);
+  border: 1px solid var(--photon-stroke-result);
+  border-radius: var(--photon-r-badge);
+  color: var(--photon-gold);
+  font-family: var(--photon-font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Data ──────────────────────────────────────────────────────── */
+
+.photon-table-wrap {
+  border: 1px solid var(--photon-stroke);
+  border-radius: var(--photon-r-field);
+  overflow: hidden;
+}
+
+.photon-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.photon-table th {
+  background: var(--photon-header-row);
+  color: var(--photon-text-on-accent);
+  font-family: var(--photon-font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: left;
+  padding: 10px 12px;
+}
+
+.photon-table td {
+  font-family: var(--photon-font-mono);
+  font-size: 13px;
+  color: var(--photon-text);
+  padding: 10px 12px;
+}
+
+.photon-table tbody tr:nth-child(even) {
+  background: var(--photon-row-alt);
+}
+
+.photon-formula-code {
+  margin: 0;
+  padding: 16px;
+  background: var(--photon-field);
+  border: 1px solid var(--photon-stroke-result);
+  border-radius: var(--photon-r-field);
+  color: var(--photon-value);
+  font-family: var(--photon-font-mono);
+  font-size: 13px;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+/* ── List item ─────────────────────────────────────────────────── */
+
+.photon-list-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--photon-card);
+  border: 1px solid var(--photon-stroke);
+  border-radius: var(--photon-r-card);
+  padding: 16px;
+  text-align: left;
+}
+
+.photon-list-item--clickable {
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.photon-list-item--clickable:hover {
+  background: var(--photon-row-alt);
+}
+
+.photon-list-item__badge {
+  font-size: 15px;
+}
+
+.photon-list-item__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.photon-list-item__title {
+  font-family: var(--photon-font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--photon-text);
+}
+
+.photon-list-item__subtitle {
+  font-family: var(--photon-font-mono);
+  font-size: 12px;
+  color: var(--photon-text-2);
+}
+
+.photon-list-item__meta {
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--photon-text-3);
+}
+
+.photon-list-item__notes {
+  margin-top: 2px;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--photon-text-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -6,16 +6,24 @@ ALL RIGHTS RESERVED.
 
 1. CODE ACCESSIBILITY
    The source code in this repository is made publicly available on GitHub
-   SOLELY FOR VIEWING AND EDUCATIONAL INSPECTION.
+   SOLELY FOR VISUAL INSPECTION AND TO SHOWCASE THE AUTHOR'S WORK. Public
+   access does not make the Software open source or grant reuse rights.
 
 2. NO USE OF THE APPLICATION
    You are strictly PROHIBITED from:
+   - Using a fork or other reproduction of this repository as the basis for a
+     personal or third-party project, product, service, or derivative work.
    - Running, executing, or deploying this software for any purpose.
    - Using the application for its intended photographic exposure calculation
      purpose or any similar real-world functionality.
    - Copying, modifying, or creating derivative works of the code.
+   - Incorporating or reusing the code, in whole or in part, in personal or
+     third-party projects, products, services, coursework submissions, internal
+     tools, or production systems.
    - Distributing, sublicensing, or making the software available to third
      parties in any compiled or executable form.
+   - Using or exploiting the Software for commercial, professional, or business
+     purposes without an authorized purchase or separate written license.
 
 3. COMMERCIAL VERSION REQUIRED
    If you wish to use this application for its intended purpose

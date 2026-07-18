@@ -1,0 +1,16 @@
+{
+  "projectId": "8594bbac-d2bc-49c5-96ae-0d1e09d10cd0",
+  "shape": "package",
+  "pkg": "photon-exposure-ds",
+  "globalName": "PhotonDS",
+  "buildCmd": "npm --prefix design-system run build",
+  "readmeHeader": ".design-sync/conventions.md",
+  "cssEntry": "dist/photon.css",
+  "provider": { "component": "PhotonProvider", "props": { "fullscreen": false } },
+  "overrides": {
+    "SegmentedTabs": { "cardMode": "column" },
+    "Select": { "cardMode": "column" },
+    "TextArea": { "cardMode": "column" },
+    "TextField": { "cardMode": "column" }
+  }
+}
