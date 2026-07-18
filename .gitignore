@@ -64,3 +64,6 @@ design-system/dist/
 .env.*.local
 *.hprof
 .kotlin/
+
+# Documentazione locale non pubblicata
+/reference matematiche.md

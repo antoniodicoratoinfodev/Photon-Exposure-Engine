@@ -31,9 +31,6 @@ It is published **solely** to:
 
 The official, ready-to-use version is available for purchase on the Google Play Store.
 
-The formulas and mathematical implementation details are collected in the
-[mathematical reference](./reference%20matematiche.md).
-
 ## 📸 Screenshots
 
 Complete interface coverage in both light and dark themes.
@@ -76,7 +73,6 @@ Complete interface coverage in both light and dark themes.
 | Screen | Purpose |
 |---|---|
 | `MainActivity` | Exposure calculator, Digital/Analog tabs, dark-theme toggle |
-| `FormulasActivity` | In-app technical reference |
 | `SavedExposuresActivity` | Log of saved exposures, persisted locally |
 
 ## 🧱 Project structure
@@ -95,7 +91,6 @@ Photon-Exposure-Engine/
 │       │   │   ├── ExposureLogStore.java        # persistence of saved exposures
 │       │   │   ├── SavedExposure.java           # saved-exposure model
 │       │   │   ├── MainActivity.java            # calculator screen
-│       │   │   ├── FormulasActivity.java        # in-app reference screen
 │       │   │   └── SavedExposuresActivity.java  # saved-exposure log
 │       │   └── res/
 │       │       ├── layout/                      # activity, dialog, item layouts
@@ -111,7 +106,6 @@ Photon-Exposure-Engine/
 ├── settings.gradle
 ├── gradle.properties
 ├── LICENSE.md
-├── reference matematiche.md
 └── README.md
 ```
 
@@ -220,9 +214,6 @@ Questo repository contiene il codice sorgente completo dell'app **Photon-Exposur
 
 La versione ufficiale e pronta all'uso è disponibile per l'acquisto su Google Play Store.
 
-Le formule e i dettagli matematici dell'implementazione sono raccolti nel
-documento separato [reference matematiche](./reference%20matematiche.md).
-
 ## 📸 Screenshot
 
 | | | |
@@ -256,7 +247,6 @@ documento separato [reference matematiche](./reference%20matematiche.md).
 | Schermata | Scopo |
 |---|---|
 | `MainActivity` | Calcolatore di esposizione, tab Digital/Analog, interruttore tema scuro |
-| `FormulasActivity` | Riferimento tecnico in-app |
 | `SavedExposuresActivity` | Registro delle esposizioni salvate, persistito localmente |
 
 ## 🧱 Struttura del progetto
@@ -275,7 +265,6 @@ Photon-Exposure-Engine/
 │       │   │   ├── ExposureLogStore.java        # persistenza esposizioni salvate
 │       │   │   ├── SavedExposure.java           # modello esposizione salvata
 │       │   │   ├── MainActivity.java            # schermata calcolatore
-│       │   │   ├── FormulasActivity.java        # schermata di riferimento in-app
 │       │   │   └── SavedExposuresActivity.java  # registro esposizioni salvate
 │       │   └── res/
 │       │       ├── layout/                      # layout activity, dialog, item
@@ -291,7 +280,6 @@ Photon-Exposure-Engine/
 ├── settings.gradle
 ├── gradle.properties
 ├── LICENSE.md
-├── reference matematiche.md
 └── README.md
 ```
 
